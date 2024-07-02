@@ -1,4 +1,4 @@
-name: Deploy to GitHub Pages
+name: Build and Deploy to GitHub Pages
 
 on:
   push:
@@ -8,15 +8,9 @@ on:
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
-
-      - name: Set up Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '16'
 
       - name: Install dependencies
         run: npm install
@@ -24,17 +18,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Configure Git identity
-        run: |
-          git config --global user.email "elgameshdpay@gmail.com"
-          git config --global user.name "eulogioqt"
-
       - name: Deploy to GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git remote set-url origin https://github.com/${GITHUB_REPOSITORY}.git
-          git checkout main
-          git add .
-          git commit -m "Deploy to GitHub Pages"
-          git push origin main:gh-pages
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@users.noreply.github.com'
+          git checkout --orphan gh-pages
+          git rm -rf .
+          cp -r dist/* .
+          git add -A
+          git commit -m 'Deploy updated build to GitHub Pages'
+          git branch -M gh-pages
+          git push -f origin gh-pages
+
