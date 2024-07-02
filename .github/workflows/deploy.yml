@@ -1,25 +1,30 @@
-name: Deploy to gh-pages
+name: Deploy to GitHub Pages
 
 on:
   push:
     branches:
-      - main  # Se activa cuando se hace push a la rama main
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
 
       - name: Install dependencies
         run: npm install
 
-      - name: Build React app
+      - name: Build project
         run: npm run build
 
-      - name: Deploy to gh-pages
+      - name: Deploy to GitHub Pages
+        run: npm run deploy
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: npx gh-pages -d build -t true -a -m "Deploy to gh-pages"
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
