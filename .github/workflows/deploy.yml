@@ -30,6 +30,8 @@ jobs:
           git config --global user.name "eulogioqt"
 
       - name: Deploy to GitHub Pages
-        run: npm run deploy
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git remote set-url origin https://github.com/${GITHUB_REPOSITORY}.git
+          gh-pages -b main -d dist
