@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useEffect, useState } from 'react';
+import GameArea from './GameArea';
+import "./App.css";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+    const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
+    const [dir, setDir] = useState([0, 0]);
+    const [score, setScore] = useState(0);
 
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    const SPEED = 250;
+    const DIRECTIONS = {
+        38: [0, -1], // up
+        40: [0, 1], // down
+        37: [-1, 0], // left
+        39: [1, 0] // right
+    };
 
-export default App
+    const handleDir = (key) => {
+        const dir = DIRECTIONS[key];
+        if (dir !== undefined)
+            setDir(dir);
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setSnake(snake => {
+                return (
+                    [{ x: snake[0].x + 1, y: snake[0].y }]
+                );
+            });
+        }, SPEED);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    return (
+        <div>
+            <h1>Snake Game</h1>
+            <h2>Score: {score}</h2>
+            <GameArea snake={snake} />
+        </div>
+    );
+};
+
+export default App;
