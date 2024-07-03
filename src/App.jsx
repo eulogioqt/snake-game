@@ -83,7 +83,6 @@ const App = () => {
         <div>
             <h1>Snake Game</h1>
             <h2>Score: {score}</h2>
-            {gameOver && <h2>Game Over!</h2>}
             <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
         </div>
     );
