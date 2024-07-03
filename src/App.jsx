@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GameArea from './GameArea';
-import "./App.css";
+import ControlPad from './ControlPad';
 
 const SPEED = 100;
 const DIRECTIONS = {
@@ -11,10 +11,10 @@ const DIRECTIONS = {
 };
 
 const CONSTANTS = {
-    WIDTH: 800,
-    HEIGHT: 600,
+    WIDTH: Math.floor(window.innerWidth * 75 / 2000) * 20,
+    HEIGHT: Math.floor(window.innerHeight * 50 / 2000) * 20,
     CELL_SIZE: 20
-}
+};
 
 const APPLE_START = { x: 5, y: 1 };
 const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
@@ -43,14 +43,13 @@ const App = () => {
     const bodyCollision = () => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
     const wallCollision = () => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = () => bodyCollision() || wallCollision();
+    const handleDir = (keyCode) => {
+        const newDir = DIRECTIONS[keyCode];
+        if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y))
+            setDir(newDir);
+    }
 
     useEffect(() => {
-        const handleDir = (keyCode) => {
-            const newDir = DIRECTIONS[keyCode];
-            if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y))
-                setDir(newDir);
-        }
-
         const handleKeyDown = (event) => handleDir(event.keyCode);
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
@@ -81,10 +80,11 @@ const App = () => {
     }, [timer]);
 
     return (
-        <div>
+        <div className='d-flex flex-column justify-content-center align-items-center'>
             <h1>Snake Game</h1>
             <h2>Score: {score}</h2>
             <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
+            <ControlPad onClick={handleDir} />
         </div>
     );
 };
