@@ -16,17 +16,17 @@ const CONSTANTS = {
     CELL_SIZE: 20
 }
 
-const APPLE_START = { x: 2, y: 0 };
+const APPLE_START = { x: 5, y: 1 };
 const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
 const HEIGHT_CELLS = CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE;
 
 const App = () => {
     const [timer, setTimer] = useState(0);
 
-    const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
+    const [snake, setSnake] = useState([{ x: 0, y: 0 }, { x: 1, y: 0 }]);
     const [apple, setApple] = useState(APPLE_START);
     const [score, setScore] = useState(0);
-    const [dir, setDir] = useState([0, 0]);
+    const [dir, setDir] = useState([1, 0]);
     const [gameOver, setGameOver] = useState(false);
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
@@ -47,13 +47,14 @@ const App = () => {
     useEffect(() => {
         const handleDir = (keyCode) => {
             const newDir = DIRECTIONS[keyCode];
-            if (newDir)
-                setDir(actualDir => actualDir[0] !== -newDir[0] || actualDir[1] !== -newDir[1] ? newDir : actualDir);
+            if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y))
+                setDir(newDir);
         }
 
-        document.addEventListener('keydown', (event) => handleDir(event.keyCode));
+        const handleKeyDown = (event) => handleDir(event.keyCode);
+        document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    }, [snake]);
 
     useEffect(() => {
         if (gameOver) return;
