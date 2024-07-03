@@ -50,13 +50,22 @@ const App = () => {
 
     useEffect(() => {
         const moveSnake = () => {
-            if (appleCollision()) {
-                generateApple();
-                setScore(prevScore => prevScore + 1);
-            }
+            setSnake(prevSnake => {
+                const newSnake = [...prevSnake];
+                const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
 
-            setSnake(prevSnake =>
-                [{ x: prevSnake[0].x + dir[0], y: prevSnake[0].y + dir[1] }]);
+                // Añadir nueva cabeza y remover la cola para mover el snake
+                newSnake.unshift(head);
+                newSnake.pop();
+
+                if (appleCollision()) {
+                    generateApple();
+                    setScore(prevScore => prevScore + 1);
+                    newSnake.push(newSnake[newSnake.length - 1]); // Añadir una nueva parte al snake
+                }
+
+                return newSnake;
+            });
         };
 
         const interval = setInterval(moveSnake, SPEED);
