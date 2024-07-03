@@ -1,27 +1,26 @@
 import { useEffect, useRef } from "react";
 
-const GameArea = ({ snake }) => {
+const GameArea = ({ snake, apple, CONSTANTS }) => {
     const canvasRef = useRef(null);
-
-    const WIDTH = 800;
-    const HEIGHT = 600;
-    const CELL_SIZE = 20;
 
     useEffect(() => {
         const ctx = canvasRef.current.getContext("2d");
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.clearRect(0, 0, CONSTANTS.WIDTH, CONSTANTS.HEIGHT);
 
         ctx.fillStyle = 'black';
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillRect(0, 0, CONSTANTS.WIDTH, CONSTANTS.HEIGHT);
+
+        ctx.fillStyle = 'red';
+        ctx.fillRect(apple.x * CONSTANTS.CELL_SIZE, apple.y * CONSTANTS.CELL_SIZE, CONSTANTS.CELL_SIZE, CONSTANTS.CELL_SIZE);
 
         ctx.fillStyle = 'green';
         snake.forEach(segment => {
-            ctx.fillRect(segment.x * CELL_SIZE, segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            ctx.fillRect(segment.x * CONSTANTS.CELL_SIZE, segment.y * CONSTANTS.CELL_SIZE, CONSTANTS.CELL_SIZE, CONSTANTS.CELL_SIZE)
         });
     }, [snake]);
 
     return (
-        <canvas ref={canvasRef} width={WIDTH} height={HEIGHT}></canvas>
+        <canvas ref={canvasRef} width={CONSTANTS.WIDTH} height={CONSTANTS.HEIGHT}></canvas>
     );
 }
 
