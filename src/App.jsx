@@ -17,19 +17,40 @@ const CONSTANTS = {
 }
 
 const APPLE_START = { x: 2, y: 0 };
+const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
+const HEIGHT_CELLS = CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE;
 
 const App = () => {
     const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
     const [apple, setApple] = useState(APPLE_START);
     const [score, setScore] = useState(0);
     const [dir, setDir] = useState([0, 0]);
+    const [gameOver, setGameOver] = useState(false);
+
+    const dirRef = useRef(dir);
+    const snakeRef = useRef(snake);
+    const appleRef = useRef(apple);
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
-    const generateApple = () => setApple({
-        x: getRandomInt(CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE),
-        y: getRandomInt(CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE)
-    });
-    const appleCollision = () => apple !== undefined && snake[0].x === apple.x && snake[0].y === apple.y;
+    const generateApple = () => {
+        let newApple;
+        do {
+            newApple = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
+        } while (snakeRef.current.some(segment => segment.x === newApple.x && segment.y === newApple.y));
+        setApple(newApple);
+        appleRef.current = newApple;
+    };
+
+    const appleCollision = () => appleRef.current !== undefined && snakeRef.current[0].x === appleRef.current.x && snakeRef.current[0].y === appleRef.current.y;
+    const bodyCollision = () => {
+        const head = snakeRef.current[0];
+        return snakeRef.current.slice(1).some(segment => segment.x === head.x && segment.y === head.y);
+    };
+    const wallCollision = () => {
+        const head = snakeRef.current[0];
+        return head.x < 0 || head.y < 0 || head.x >= WIDTH_CELLS || head.y >= HEIGHT_CELLS;
+    };
+    const checkCollision = () => bodyCollision() || wallCollision();
 
     useEffect(() => {
         const handleDir = (keyCode) => {
@@ -37,6 +58,8 @@ const App = () => {
             if (newDir !== undefined) {
                 setDir(actualDir => {
                     const validMove = actualDir[0] !== -newDir[0] || actualDir[1] !== -newDir[1];
+                    if (validMove)
+                        dirRef.current = newDir;
 
                     return validMove ? newDir : actualDir;
                 });
@@ -49,33 +72,48 @@ const App = () => {
     }, []);
 
     useEffect(() => {
+        if (gameOver) return;
+
         const moveSnake = () => {
+            if (checkCollision()) {
+                setGameOver(true);
+                return;
+            }
+
             setSnake(prevSnake => {
                 const newSnake = [...prevSnake];
-                const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
+                const head = { x: newSnake[0].x + dirRef.current[0], y: newSnake[0].y + dirRef.current[1] };
 
-                // Añadir nueva cabeza y remover la cola para mover el snake
                 newSnake.unshift(head);
-                newSnake.pop();
-
-                if (appleCollision()) {
+                if (!appleCollision()) {
+                    newSnake.pop();
+                } else {
                     generateApple();
                     setScore(prevScore => prevScore + 1);
-                    newSnake.push(newSnake[newSnake.length - 1]); // Añadir una nueva parte al snake
                 }
 
+                snakeRef.current = newSnake;
                 return newSnake;
             });
         };
 
         const interval = setInterval(moveSnake, SPEED);
         return () => clearInterval(interval);
-    }, [snake, apple, dir, SPEED]);
+    }, [gameOver]);
+
+    useEffect(() => {
+        snakeRef.current = snake;
+    }, [snake]);
+
+    useEffect(() => {
+        appleRef.current = apple;
+    }, [apple]);
 
     return (
         <div>
             <h1>Snake Game</h1>
             <h2>Score: {score}</h2>
+            {gameOver && <h2>Game Over!</h2>}
             <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
         </div>
     );
