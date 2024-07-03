@@ -21,93 +21,63 @@ const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
 const HEIGHT_CELLS = CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE;
 
 const App = () => {
+    const [timer, setTimer] = useState(0);
+
     const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
     const [apple, setApple] = useState(APPLE_START);
     const [score, setScore] = useState(0);
     const [dir, setDir] = useState([0, 0]);
     const [gameOver, setGameOver] = useState(false);
 
-    const dirRef = useRef(dir);
-    const snakeRef = useRef(snake);
-    const appleRef = useRef(apple);
-
     const getRandomInt = (max) => Math.floor(Math.random() * max);
     const generateApple = () => {
         let newApple;
         do {
             newApple = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
-        } while (snakeRef.current.some(segment => segment.x === newApple.x && segment.y === newApple.y));
+        } while (snake.some(segment => segment.x === newApple.x && segment.y === newApple.y));
+
         setApple(newApple);
-        appleRef.current = newApple;
     };
 
-    const appleCollision = () => appleRef.current !== undefined && snakeRef.current[0].x === appleRef.current.x && snakeRef.current[0].y === appleRef.current.y;
-    const bodyCollision = () => {
-        const head = snakeRef.current[0];
-        return snakeRef.current.slice(1).some(segment => segment.x === head.x && segment.y === head.y);
-    };
-    const wallCollision = () => {
-        const head = snakeRef.current[0];
-        return head.x < 0 || head.y < 0 || head.x >= WIDTH_CELLS || head.y >= HEIGHT_CELLS;
-    };
+    const appleCollision = () => apple !== undefined && snake[0].x === apple.x && snake[0].y === apple.y;
+    const bodyCollision = () => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
+    const wallCollision = () => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = () => bodyCollision() || wallCollision();
 
     useEffect(() => {
         const handleDir = (keyCode) => {
             const newDir = DIRECTIONS[keyCode];
-            if (newDir !== undefined) {
-                setDir(actualDir => {
-                    const validMove = actualDir[0] !== -newDir[0] || actualDir[1] !== -newDir[1];
-                    if (validMove)
-                        dirRef.current = newDir;
-
-                    return validMove ? newDir : actualDir;
-                });
-            }
+            if (newDir)
+                setDir(actualDir => actualDir[0] !== -newDir[0] || actualDir[1] !== -newDir[1] ? newDir : actualDir);
         }
-        const handleKeyDown = (event) => handleDir(event.keyCode);
 
-        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keydown', (event) => handleDir(event.keyCode));
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, []);
 
     useEffect(() => {
         if (gameOver) return;
 
-        const moveSnake = () => {
-            if (checkCollision()) {
-                setGameOver(true);
-                return;
-            }
-
-            setSnake(prevSnake => {
-                const newSnake = [...prevSnake];
-                const head = { x: newSnake[0].x + dirRef.current[0], y: newSnake[0].y + dirRef.current[1] };
-
-                newSnake.unshift(head);
-                if (!appleCollision()) {
-                    newSnake.pop();
-                } else {
-                    generateApple();
-                    setScore(prevScore => prevScore + 1);
-                }
-
-                snakeRef.current = newSnake;
-                return newSnake;
-            });
-        };
-
-        const interval = setInterval(moveSnake, SPEED);
+        const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
         return () => clearInterval(interval);
     }, [gameOver]);
 
     useEffect(() => {
-        snakeRef.current = snake;
-    }, [snake]);
+        if (checkCollision()) setGameOver(true);
+        else {
+            const newSnake = [...snake];
+            const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
 
-    useEffect(() => {
-        appleRef.current = apple;
-    }, [apple]);
+            newSnake.unshift(head);
+            if (!appleCollision()) newSnake.pop();
+            else {
+                generateApple();
+                setScore(prevScore => prevScore + 1);
+            }
+
+            setSnake(newSnake);
+        }
+    }, [timer]);
 
     return (
         <div>
