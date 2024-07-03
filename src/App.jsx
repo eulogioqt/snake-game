@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GameArea from './GameArea';
-import "./App.css";
+import ControlPad from './ControlPad';
 
 const SPEED = 100;
 const DIRECTIONS = {
@@ -11,22 +11,22 @@ const DIRECTIONS = {
 };
 
 const CONSTANTS = {
-    WIDTH: 800,
-    HEIGHT: 600,
+    WIDTH: Math.floor(window.innerWidth * 75 / 2000) * 20,
+    HEIGHT: Math.floor(window.innerHeight * 50 / 2000) * 20,
     CELL_SIZE: 20
-}
+};
 
-const APPLE_START = { x: 2, y: 0 };
+const APPLE_START = { x: 5, y: 1 };
 const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
 const HEIGHT_CELLS = CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE;
 
 const App = () => {
     const [timer, setTimer] = useState(0);
 
-    const [snake, setSnake] = useState([{ x: 0, y: 0 }]);
+    const [snake, setSnake] = useState([{ x: 0, y: 0 }, { x: 1, y: 0 }]);
     const [apple, setApple] = useState(APPLE_START);
     const [score, setScore] = useState(0);
-    const [dir, setDir] = useState([0, 0]);
+    const [dir, setDir] = useState([1, 0]);
     const [gameOver, setGameOver] = useState(false);
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
@@ -43,17 +43,17 @@ const App = () => {
     const bodyCollision = () => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
     const wallCollision = () => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = () => bodyCollision() || wallCollision();
+    const handleDir = (keyCode) => {
+        const newDir = DIRECTIONS[keyCode];
+        if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y))
+            setDir(newDir);
+    }
 
     useEffect(() => {
-        const handleDir = (keyCode) => {
-            const newDir = DIRECTIONS[keyCode];
-            if (newDir)
-                setDir(actualDir => actualDir[0] !== -newDir[0] || actualDir[1] !== -newDir[1] ? newDir : actualDir);
-        }
-
-        document.addEventListener('keydown', (event) => handleDir(event.keyCode));
+        const handleKeyDown = (event) => handleDir(event.keyCode);
+        document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
-    }, []);
+    }, [snake]);
 
     useEffect(() => {
         if (gameOver) return;
@@ -80,10 +80,11 @@ const App = () => {
     }, [timer]);
 
     return (
-        <div>
+        <div className='d-flex flex-column justify-content-center align-items-center'>
             <h1>Snake Game</h1>
             <h2>Score: {score}</h2>
             <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
+            <ControlPad onClick={handleDir} />
         </div>
     );
 };
