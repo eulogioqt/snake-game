@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import GameArea from './GameArea';
 import ControlPad from './ControlPad';
+import GameOver from './GameOver';
 
 const SPEED = 100;
 const DIRECTIONS = {
@@ -16,17 +17,20 @@ const CONSTANTS = {
     CELL_SIZE: 20
 };
 
-const APPLE_START = { x: 5, y: 1 };
 const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
 const HEIGHT_CELLS = CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE;
+
+const APPLE_START = { x: 5, y: 1 };
+const SNAKE_START = [{ x: 0, y: 0 }, { x: 1, y: 0 }];
+const DIR_START = [1, 0];
 
 const App = () => {
     const [timer, setTimer] = useState(0);
 
-    const [snake, setSnake] = useState([{ x: 0, y: 0 }, { x: 1, y: 0 }]);
+    const [snake, setSnake] = useState(SNAKE_START);
     const [apple, setApple] = useState(APPLE_START);
     const [score, setScore] = useState(0);
-    const [dir, setDir] = useState([1, 0]);
+    const [dir, setDir] = useState(DIR_START);
     const [gameOver, setGameOver] = useState(false);
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
@@ -79,13 +83,29 @@ const App = () => {
         }
     }, [timer]);
 
+    const playAgain = () => {
+        setTimer(0);
+
+        setSnake(SNAKE_START);
+        setApple(APPLE_START);
+        setScore(0);
+        setDir(DIR_START);
+        setGameOver(false);
+    }
+
     return (
-        <div className='d-flex flex-column justify-content-center align-items-center'>
-            <h1>Snake Game</h1>
-            <h2>Score: {score}</h2>
-            <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
-            <ControlPad onClick={handleDir} />
-        </div>
+        <>
+            <GameOver gameOver={gameOver} playAgain={playAgain} score={score} />
+
+            <div className='d-flex flex-column justify-content-center align-items-center'>
+                <div className='text-center my-3'>
+                    <h1>Snake Game</h1>
+                    <h2>Score: {score}</h2>
+                </div>
+                <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
+                <ControlPad onKeyDown={handleDir} />
+            </div>
+        </>
     );
 };
 
