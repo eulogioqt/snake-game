@@ -81,10 +81,12 @@ const App = () => {
 
     return (
         <div className='d-flex flex-column justify-content-center align-items-center'>
-            <h1>Snake Game</h1>
-            <h2>Score: {score}</h2>
+            <div className='text-center my-3'>
+                <h1>Snake Game</h1>
+                <h2>Score: {score}</h2>
+            </div>
             <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
-            <ControlPad onClick={handleDir} />
+            <ControlPad onKeyDown={handleDir} />
         </div>
     );
 };
