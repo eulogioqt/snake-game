@@ -1,7 +1,27 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GearFill, Palette, Gear } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
+import { useSettings } from '../context/SettingsContext';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
+    const { rack, setRack, snakeColor, setSnakeColor, AIMode, setAIMode } = useSettings();
+
+    const [showRack, setShowRack] = useState(rack);
+    const [showAIMode, setShowAIMode] = useState(AIMode);
+
+    const handleRackChange = () => {
+        setRack(!showRack);
+        setShowRack(!showRack);
+    };
+
+    const handleAIModeChange = () => {
+        setAIMode(!showAIMode);
+        setShowAIMode(!showAIMode);
+    };
+
+    const handleColorChange = (event) => {
+        setSnakeColor(event.target.value);
+    };
+
     const settingsMenuRender = (
         <div className='d-flex align-items-center justify-content-center position-fixed w-100 h-100'
             style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 999 }}>
@@ -9,38 +29,56 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                 <h2 className="text-center mb-4">Configuración</h2>
 
                 {/* Opción para activar/desactivar la rejilla */}
-                <div className="mb-4 row align-items-center">
-                    <div className="col-12 d-flex align-items-center justify-content-between">
+                <div className="mb-4">
+                    <div className='d-flex align-items-center justify-content-between'>
                         <div className='d-flex align-items-center'>
                             <GearFill size={30} className="me-3 flex-shrink-0" />
                             <h5 className='mb-0 me-3'>Mostrar rejilla</h5>
                         </div>
                         <div className="form-check form-switch">
-                            <input className="form-check-input" type="checkbox" style={{ width: "40px", height: "25px" }} />
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={showRack}
+                                onChange={handleRackChange}
+                                style={{ width: "40px", height: "25px" }}
+                            />
                         </div>
                     </div>
                 </div>
 
                 {/* Selección de color para la serpiente */}
-                <div className="mb-4 row align-items-center">
-                    <div className="col-12 d-flex align-items-center justify-content-between">
+                <div className="mb-4">
+                    <div className='d-flex align-items-center justify-content-between'>
                         <div className='d-flex align-items-center'>
                             <Palette size={30} className="me-3 flex-shrink-0" />
                             <h5 className='mb-0 me-3'>Color de la serpiente</h5>
                         </div>
-                        <input type="color" id="snakeColor" className="form-control form-control-color" />
+                        <input
+                            type="color"
+                            id="snakeColor"
+                            className="form-control form-control-color"
+                            value={snakeColor}
+                            onChange={handleColorChange}
+                        />
                     </div>
                 </div>
 
                 {/* Opción para activar/desactivar el modo inteligencia artificial */}
-                <div className="mb-4 row align-items-center">
-                    <div className="col-12 d-flex align-items-center justify-content-between">
+                <div className="mb-4">
+                    <div className='d-flex align-items-center justify-content-between'>
                         <div className='d-flex align-items-center'>
                             <Gear size={30} className="me-3 flex-shrink-0" />
                             <h5 className='mb-0 me-3'>Modo inteligencia artificial</h5>
                         </div>
                         <div className="form-check form-switch">
-                            <input className="form-check-input" type="checkbox" style={{ width: "40px", height: "25px" }} />
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={showAIMode}
+                                onChange={handleAIModeChange}
+                                style={{ width: "40px", height: "25px" }}
+                            />
                         </div>
                     </div>
                 </div>

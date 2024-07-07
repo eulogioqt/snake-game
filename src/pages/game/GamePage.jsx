@@ -81,14 +81,15 @@ const GamePage = () => {
         setGameStatus(0);
     }
 
+    const time = (timer / (1000 / SPEED)).toFixed(2);
     return (
         <>
-            <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} />
+            <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
 
             <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
                 <div className='text-center my-3 monospace'>
                     <h1>Snake Game</h1>
-                    <h2>Score: {score} Time: {(timer / (1000 / SPEED)).toFixed(2)}s</h2>
+                    <h2>Score: {score} Time: {time}s</h2>
                 </div>
                 <GameArea snake={snake} apple={apple} />
                 <ControlPad onKeyDown={handleDir} />

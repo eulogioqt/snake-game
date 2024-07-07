@@ -22,7 +22,7 @@ const MenuPage = () => {
                 </span>
                 <button className="btn btn-primary mb-2 d-flex align-items-center justify-content-start"
                     style={{ fontSize: "2rem", width: isLarge ? "400px" : "250px", padding: "10px" }}
-                    onClick={goToGame} onKeyPress={goToGame}>
+                    onClick={goToGame}>
                     <Play style={{ width: "50px", height: "50px" }} />
                     <span className="flex-grow-1 text-center me-4">
                         Jugar
@@ -30,7 +30,7 @@ const MenuPage = () => {
                 </button>
                 <button className="btn btn-secondary d-flex align-items-center justify-content-start"
                     style={{ fontSize: "2rem", width: isLarge ? "400px" : "250px", padding: "10px" }}
-                    onClick={swapSettingsOpen} onKeyPress={swapSettingsOpen}>
+                    onClick={swapSettingsOpen}          >
                     <Gear style={{ margin: "7px" }} />
                     <span className="flex-grow-1 text-center me-4">
                         Ajustes
