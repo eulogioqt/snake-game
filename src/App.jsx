@@ -1,28 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { SPEED, WIDTH, HEIGHT, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, APPLE_START } from './CONSTANTS.js';
+
 import GameArea from './GameArea';
 import ControlPad from './ControlPad';
 import GameOver from './GameOver';
 
-const SPEED = 100;
-const DIRECTIONS = {
-    38: [0, -1], // up
-    40: [0, 1], // down
-    37: [-1, 0], // left
-    39: [1, 0] // right
-};
-
-const CONSTANTS = {
-    WIDTH: Math.floor(window.innerWidth * 75 / 2000) * 20,
-    HEIGHT: Math.floor(window.innerHeight * 50 / 2000) * 20,
-    CELL_SIZE: 20
-};
-
-const WIDTH_CELLS = CONSTANTS.WIDTH / CONSTANTS.CELL_SIZE;
-const HEIGHT_CELLS = CONSTANTS.HEIGHT / CONSTANTS.CELL_SIZE;
-
-const APPLE_START = { x: 5, y: 1 };
-const SNAKE_START = [{ x: 0, y: 0 }, { x: 1, y: 0 }];
-const DIR_START = [1, 0];
+import './App.css';
 
 const App = () => {
     const [timer, setTimer] = useState(0);
@@ -37,7 +20,7 @@ const App = () => {
     const generateApple = () => {
         let newApple;
         do {
-            newApple = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
+            newApple = { x: getRandomInt(WIDTH / CELL_SIZE), y: getRandomInt(HEIGHT / CELL_SIZE) };
         } while (snake.some(segment => segment.x === newApple.x && segment.y === newApple.y));
 
         setApple(newApple);
@@ -45,7 +28,7 @@ const App = () => {
 
     const appleCollision = () => apple !== undefined && snake[0].x === apple.x && snake[0].y === apple.y;
     const bodyCollision = () => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
-    const wallCollision = () => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
+    const wallCollision = () => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH / CELL_SIZE || snake[0].y >= HEIGHT / CELL_SIZE;
     const checkCollision = () => bodyCollision() || wallCollision();
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
@@ -54,19 +37,22 @@ const App = () => {
     }
 
     useEffect(() => {
+        if (!gameOver) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
+            const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
+            return () => clearInterval(interval);
+        }
+    }, [gameOver]);
+
+    useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
 
+
     useEffect(() => {
         if (gameOver) return;
 
-        const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
-        return () => clearInterval(interval);
-    }, [gameOver]);
-
-    useEffect(() => {
         if (checkCollision()) setGameOver(true);
         else {
             const newSnake = [...snake];
@@ -100,9 +86,9 @@ const App = () => {
             <div className='d-flex flex-column justify-content-center align-items-center'>
                 <div className='text-center my-3'>
                     <h1>Snake Game</h1>
-                    <h2>Score: {score}</h2>
+                    <h2>Score: {score} - Time: {(timer / (1000 / SPEED)).toFixed(2)}s</h2>
                 </div>
-                <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
+                <GameArea snake={snake} apple={apple} />
                 <ControlPad onKeyDown={handleDir} />
             </div>
         </>
