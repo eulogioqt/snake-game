@@ -64,7 +64,7 @@ const GamePage = () => {
             newSnake.pop();
 
             const isCollision = checkCollision(newSnake);
-            if (isCollision) setGameStatus(2); // Perdemos si hay colisión
+            if (isCollision && !inmortalMode) setGameStatus(2); // Perdemos si hay colisión
             else if (checkWin(newSnake)) setGameStatus(3); // Ganamos si esta el tablero lleno
             else if (appleCollision(newSnake)) { // Crecemos si comemos manzana
                 newSnake.push({}); // Añadimos parte del cuerpo
