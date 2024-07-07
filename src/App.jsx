@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 import GameArea from './GameArea';
 import ControlPad from './ControlPad';
 import GameOver from './GameOver';
@@ -12,8 +13,8 @@ const DIRECTIONS = {
 };
 
 const CONSTANTS = {
-    WIDTH: Math.floor(window.innerWidth * 75 / 2000) * 20,
-    HEIGHT: Math.floor(window.innerHeight * 50 / 2000) * 20,
+    WIDTH: Math.floor(window.innerWidth * 75 / (100 * 20)) * 20,
+    HEIGHT: Math.floor(window.innerHeight * 50 / (100 * 20)) * 20,
     CELL_SIZE: 20
 };
 
@@ -54,19 +55,22 @@ const App = () => {
     }
 
     useEffect(() => {
+        if (!gameOver) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
+            const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
+            return () => clearInterval(interval);
+        }
+    }, [gameOver]);
+
+    useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
 
+
     useEffect(() => {
         if (gameOver) return;
 
-        const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
-        return () => clearInterval(interval);
-    }, [gameOver]);
-
-    useEffect(() => {
         if (checkCollision()) setGameOver(true);
         else {
             const newSnake = [...snake];
@@ -100,7 +104,7 @@ const App = () => {
             <div className='d-flex flex-column justify-content-center align-items-center'>
                 <div className='text-center my-3'>
                     <h1>Snake Game</h1>
-                    <h2>Score: {score}</h2>
+                    <h2>Score: {score} - Time: {timer / (1000 / SPEED)}s</h2>
                 </div>
                 <GameArea snake={snake} apple={apple} CONSTANTS={CONSTANTS} />
                 <ControlPad onKeyDown={handleDir} />

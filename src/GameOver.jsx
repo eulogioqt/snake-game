@@ -1,20 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+
+const largeScreenStyles = {
+    fontSize: "4rem",
+    buttonFontSize: "1.5rem",
+    subTitleFontSize: "2.5rem"
+};
+
+const smallScreenStyles = {
+    fontSize: "2.3rem",
+    buttonFontSize: "1rem",
+    subTitleFontSize: "1.25rem"
+};
 
 const GameOver = ({ gameOver, playAgain, score }) => {
-    const largeScreenStyles = {
-        fontSize: "4rem",
-        buttonFontSize: "1.5rem",
-        subTitleFontSize: "2.5rem"
-    };
+    const handleRetry = (event) => {
+        if (event.key === "Enter")
+            playAgain();
+    }
 
-    const smallScreenStyles = {
-        fontSize: "2.3rem",
-        buttonFontSize: "1rem",
-        subTitleFontSize: "1.25rem"
-    };
+    useEffect(() => {
+        if (gameOver) {
+            document.addEventListener('keydown', handleRetry);
+            return () => document.removeEventListener('keydown', handleRetry);
+        }
+    }, [gameOver]);
 
     const styles = window.innerWidth >= 576 ? largeScreenStyles : smallScreenStyles;
-
     const gameOverRender = (
         <div className='d-flex flex-column align-items-center justify-content-center position-fixed w-100 h-100'
             style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 999 }}>
