@@ -1,16 +1,21 @@
 import React, { useState } from 'react';
-import { GearFill, Palette, Gear } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
+import { GearFill, Palette, Gear, HeartFill } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
 import { useSettings } from '../context/SettingsContext';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
-    const { rack, setRack, snakeColor, setSnakeColor, AIMode, setAIMode } = useSettings();
+    const { rack, setRack, snakeColor, setSnakeColor, AIMode, setAIMode, inmortalMode, setInmortalMode } = useSettings();
 
     const [showRack, setShowRack] = useState(rack);
     const [showAIMode, setShowAIMode] = useState(AIMode);
+    const [showInmortalMode, setShowInmortalMode] = useState(inmortalMode);
 
     const handleRackChange = () => {
         setRack(!showRack);
         setShowRack(!showRack);
+    };
+
+    const handleColorChange = (event) => {
+        setSnakeColor(event.target.value);
     };
 
     const handleAIModeChange = () => {
@@ -18,8 +23,9 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
         setShowAIMode(!showAIMode);
     };
 
-    const handleColorChange = (event) => {
-        setSnakeColor(event.target.value);
+    const handleInmortalModeChange = () => {
+        setInmortalMode(!showInmortalMode);
+        setShowInmortalMode(!showInmortalMode);
     };
 
     const settingsMenuRender = (
@@ -77,6 +83,25 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                                 type="checkbox"
                                 checked={showAIMode}
                                 onChange={handleAIModeChange}
+                                style={{ width: "40px", height: "25px" }}
+                            />
+                        </div>
+                    </div>
+                </div>
+
+                {/* Opción para activar/desactivar el modo inmortal */}
+                <div className="mb-4">
+                    <div className='d-flex align-items-center justify-content-between'>
+                        <div className='d-flex align-items-center'>
+                            <HeartFill size={30} className="me-3 flex-shrink-0" />
+                            <h5 className='mb-0 me-3'>Modo inmortal</h5>
+                        </div>
+                        <div className="form-check form-switch">
+                            <input
+                                className="form-check-input"
+                                type="checkbox"
+                                checked={showInmortalMode}
+                                onChange={handleInmortalModeChange}
                                 style={{ width: "40px", height: "25px" }}
                             />
                         </div>
