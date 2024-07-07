@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AppContext = createContext();
 
@@ -46,3 +46,19 @@ export const AppProvider = ({ children }) => {
 };
 
 export const useApp = () => useContext(AppContext);
+export const useIsLarge = () => {
+    const [isLarge, setIsLarge] = useState(window.innerWidth >= 576);
+
+    useEffect(() => {
+        const handleResize = () => {
+            setIsLarge(window.innerWidth >= 576);
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, []);
+
+    return isLarge;
+};

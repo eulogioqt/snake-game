@@ -1,13 +1,12 @@
 import React from 'react';
 
-import { useApp } from '../../app/AppContext';
+import { useApp, useIsLarge } from '../../app/AppContext';
 
 const GameOver = ({ gameStatus, playAgain, score }) => {
     const { handlePageIndex } = useApp();
+    const isLarge = useIsLarge();
 
     const goToMenu = () => handlePageIndex(0);
-
-    const isLarge = window.innerWidth >= 576;
 
     const gameOverRender = (
         <div className='d-flex flex-column align-items-center justify-content-center position-fixed w-100 h-100'
