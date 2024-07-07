@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { WIDTH, HEIGHT, CELL_SIZE } from './CONSTANTS.js';
-
+import { useApp } from "../../app/AppContext";
 
 const GameArea = ({ snake, apple }) => {
+    const { WIDTH, HEIGHT, CELL_SIZE } = useApp();
     const canvasRef = useRef(null);
 
     useEffect(() => {

@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { SPEED, WIDTH, HEIGHT, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, APPLE_START } from './CONSTANTS.js';
 
-import GameArea from './GameArea';
-import ControlPad from './ControlPad';
-import GameOver from './GameOver';
+import GameArea from './components/GameArea.jsx';
+import ControlPad from './components/ControlPad.jsx';
+import GameOver from './components/GameOver.jsx';
 
-import './App.css';
+import { useApp } from '../app/AppContext.jsx';
 
-const App = () => {
+const GamePage = () => {
+    const { SPEED, WIDTH, HEIGHT, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, APPLE_START } = useApp();
     const [timer, setTimer] = useState(0);
 
     const [snake, setSnake] = useState(SNAKE_START);
     const [apple, setApple] = useState(APPLE_START);
     const [score, setScore] = useState(0);
     const [dir, setDir] = useState(DIR_START);
-    const [gameOver, setGameOver] = useState(false);
+    const [gameStatus, setGameStatus] = useState(0); // 0 Not Started, 1 Started, 2 GameOver (3 Win)
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
     const generateApple = () => {
@@ -32,16 +32,19 @@ const App = () => {
     const checkCollision = () => bodyCollision() || wallCollision();
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
-        if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y))
+        if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y)) {
             setDir(newDir);
+            if (gameStatus == 0) // Si el juego esta parado
+                setGameStatus(1); // Inicio el juego
+        }
     }
 
     useEffect(() => {
-        if (!gameOver) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
+        if (gameStatus === 1) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
             const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
             return () => clearInterval(interval);
         }
-    }, [gameOver]);
+    }, [gameStatus]);
 
     useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
@@ -49,11 +52,10 @@ const App = () => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
 
-
     useEffect(() => {
-        if (gameOver) return;
+        if (gameStatus == 2) return;
 
-        if (checkCollision()) setGameOver(true);
+        if (checkCollision()) setGameStatus(2);
         else {
             const newSnake = [...snake];
             const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
@@ -76,17 +78,17 @@ const App = () => {
         setApple(APPLE_START);
         setScore(0);
         setDir(DIR_START);
-        setGameOver(false);
+        setGameStatus(0);
     }
 
     return (
         <>
-            <GameOver gameOver={gameOver} playAgain={playAgain} score={score} />
+            <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} />
 
-            <div className='d-flex flex-column justify-content-center align-items-center'>
-                <div className='text-center my-3'>
+            <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
+                <div className='text-center my-3 monospace'>
                     <h1>Snake Game</h1>
-                    <h2>Score: {score} - Time: {(timer / (1000 / SPEED)).toFixed(2)}s</h2>
+                    <h2>Score: {score} Time: {(timer / (1000 / SPEED)).toFixed(2)}s</h2>
                 </div>
                 <GameArea snake={snake} apple={apple} />
                 <ControlPad onKeyDown={handleDir} />
@@ -95,4 +97,4 @@ const App = () => {
     );
 };
 
-export default App;
+export default GamePage;
