@@ -6,6 +6,7 @@ export const SettingsProvider = ({ children }) => {
     const [rack, setRack] = useState(false);
     const [snakeColor, setSnakeColor] = useState("#00aa00");
     const [AIMode, setAIMode] = useState(false);
+    const [inmortalMode, setInmortalMode] = useState(false);
 
     return (
         <SettingsContext.Provider
@@ -15,7 +16,9 @@ export const SettingsProvider = ({ children }) => {
                 snakeColor,
                 setSnakeColor,
                 AIMode,
-                setAIMode
+                setAIMode,
+                inmortalMode,
+                setInmortalMode
             }}
         >
             {children}
