@@ -9,9 +9,9 @@ export const AppProvider = ({ children }) => {
 
     const SPEED = 100;
 
-    const WIDTH = Math.floor(window.innerWidth * 75 / (100 * 20)) * 20;
-    const HEIGHT = Math.floor(window.innerHeight * 50 / (100 * 20)) * 20;
     const CELL_SIZE = 20;
+    const WIDTH = Math.floor(window.innerWidth * 75 / (100 * CELL_SIZE)) * CELL_SIZE;
+    const HEIGHT = Math.floor(window.innerHeight * 50 / (100 * CELL_SIZE)) * CELL_SIZE;
 
     const DIR_START = [1, 0];
     const SNAKE_START = [{ x: 1, y: 0 }, { x: 0, y: 0 }];
