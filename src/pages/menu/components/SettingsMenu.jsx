@@ -34,12 +34,12 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
             <div className="card p-4" style={{ width: "80%", maxWidth: "600px" }}>
                 <h2 className="text-center mb-4">Configuración</h2>
 
-                {/* Opción para activar/desactivar la rejilla */}
+                {/* Opción para activar/desactivar la cuadricula */}
                 <div className="mb-4">
                     <div className='d-flex align-items-center justify-content-between'>
                         <div className='d-flex align-items-center'>
                             <GearFill size={30} className="me-3 flex-shrink-0" />
-                            <h5 className='mb-0 me-3'>Mostrar rejilla</h5>
+                            <h5 className='mb-0 me-3'>Mostrar cuadrícula</h5>
                         </div>
                         <div className="form-check form-switch">
                             <input
@@ -70,7 +70,7 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                     </div>
                 </div>
 
-                {/* Opción para activar/desactivar el modo inteligencia artificial */}
+                {/* Opción para activar/desactivar el modo inteligencia artificial *
                 <div className="mb-4">
                     <div className='d-flex align-items-center justify-content-between'>
                         <div className='d-flex align-items-center'>
@@ -87,7 +87,7 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                             />
                         </div>
                     </div>
-                </div>
+                </div>*/}
 
                 {/* Opción para activar/desactivar el modo inmortal */}
                 <div className="mb-4">

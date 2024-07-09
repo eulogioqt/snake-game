@@ -9,8 +9,9 @@ import { useSettings } from '../menu/context/SettingsContext.jsx';
 
 const GamePage = () => {
     const { SPEED, WIDTH, HEIGHT, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, APPLE_START, handlePageIndex } = useApp();
-    const isLarge = useIsLarge();
     const { inmortalMode } = useSettings();
+    const isLarge = useIsLarge();
+
     const [timer, setTimer] = useState(0);
 
     const [snake, setSnake] = useState(SNAKE_START);
@@ -55,8 +56,8 @@ const GamePage = () => {
         document.addEventListener('keydown', handleKeyDown);
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
-    console.log(gameStatus);
-    useEffect(() => {
+
+    useEffect(() => { // THIS METHOD EXECTES EACH TICK
         if (gameStatus == 1) { // Si el juego está en marcha
             const newSnake = [...snake];
             const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
@@ -73,7 +74,7 @@ const GamePage = () => {
                 setScore(prevScore => prevScore + 1);
             }
 
-            if (!isCollision || !inmortalMode)
+            if (!isCollision || !inmortalMode) // Quitar el or si no quiero que se salga al morir de la pantalla
                 setSnake(newSnake);
         }
     }, [timer]);
