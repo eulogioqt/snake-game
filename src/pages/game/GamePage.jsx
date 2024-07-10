@@ -61,18 +61,17 @@ const GamePage = () => {
         if (gameStatus == 1) { // Si el juego está en marcha
             const newSnake = [...snake];
             const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
-            newSnake.unshift(head); // Primero nos desplazamos
-            newSnake.pop();
+            newSnake.unshift(head); // Desplazamos la cabeza
+
+            if (!appleCollision(newSnake)) newSnake.pop(); // Si no comemos manzana, quitamos la cola
+            else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
+                generateApple(newSnake);
+                setScore(prevScore => prevScore + 1);
+            }
 
             const isCollision = checkCollision(newSnake);
             if (isCollision && !inmortalMode) setGameStatus(2); // Perdemos si hay colisión
             else if (checkWin(newSnake)) setGameStatus(3); // Ganamos si esta el tablero lleno
-            else if (appleCollision(newSnake)) { // Crecemos si comemos manzana
-                newSnake.push({}); // Añadimos parte del cuerpo
-
-                generateApple(newSnake);
-                setScore(prevScore => prevScore + 1);
-            }
 
             if (!isCollision || !inmortalMode) // Quitar el or si no quiero que se salga al morir de la pantalla
                 setSnake(newSnake);

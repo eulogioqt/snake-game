@@ -52,6 +52,7 @@ const GameArea = ({ snake, apple }) => {
 
     // Dibuja el canvas en cada actualización de snake o apple
     useEffect(() => {
+
         const ctx = canvasRef.current.getContext("2d");
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -65,8 +66,20 @@ const GameArea = ({ snake, apple }) => {
         // Manzana
         ctx.drawImage(appleImage, apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
+        // Dibuja la cuadrícula si está activada
+        if (rack) {
+            const WIDTH_CELLS = WIDTH / CELL_SIZE;
+            const HEIGHT_CELLS = HEIGHT / CELL_SIZE;
+
+            ctx.fillStyle = 'white';
+            for (let i = 0; i < WIDTH_CELLS; i++)
+                ctx.fillRect(i * CELL_SIZE, 0, 1, HEIGHT);
+
+            for (let i = 0; i < HEIGHT_CELLS; i++)
+                ctx.fillRect(0, i * CELL_SIZE, WIDTH, 1);
+        }
+
         // Cabeza
-        //ctx.drawImage(headImage, snake[0].x * CELL_SIZE, snake[0].y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         const headAngle = calcOrientation(snake, 0, 1);
         drawRotatedImage(ctx, headImage, snake[0].x * CELL_SIZE, snake[0].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, headAngle);
 
@@ -92,18 +105,6 @@ const GameArea = ({ snake, apple }) => {
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
         drawRotatedImage(ctx, tailImage, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-        // Dibuja la cuadrícula si está activada
-        if (rack) {
-            const WIDTH_CELLS = WIDTH / CELL_SIZE;
-            const HEIGHT_CELLS = HEIGHT / CELL_SIZE;
-
-            ctx.fillStyle = 'white';
-            for (let i = 0; i < WIDTH_CELLS; i++)
-                ctx.fillRect(i * CELL_SIZE, 0, 1, HEIGHT);
-
-            for (let i = 0; i < HEIGHT_CELLS; i++)
-                ctx.fillRect(0, i * CELL_SIZE, WIDTH, 1);
-        }
     }, [snake, apple, WIDTH, HEIGHT, CELL_SIZE, snakeColor, rack]);
 
     return (
