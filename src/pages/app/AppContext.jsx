@@ -9,7 +9,7 @@ export const AppProvider = ({ children }) => {
 
     const SPEED = 100;
 
-    const CELL_SIZE = 20;
+    const CELL_SIZE = 32;
     const WIDTH = Math.floor(window.innerWidth * 75 / (100 * CELL_SIZE)) * CELL_SIZE;
     const HEIGHT = Math.floor(window.innerHeight * 50 / (100 * CELL_SIZE)) * CELL_SIZE;
 
