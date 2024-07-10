@@ -25,15 +25,16 @@ const GameArea = ({ snake, apple }) => {
     // 0 no es giro, 1 giro a la derecha, 2 giro a la izquierda
     const isTwist = (snake, index) => {
         const nextSegment = snake[index - 1];
+        const currentSegment = snake[index];
         const prevSegment = snake[index + 1];
 
-        let r = 0;
-        if (prevSegment)
+        const v1 = { x: currentSegment.x - prevSegment.x, y: currentSegment.y - prevSegment.y };
+        const v2 = { x: nextSegment.x - currentSegment.x, y: nextSegment.y - currentSegment.y };
 
-            return r;
+        const crossProduct = v1.x * v2.y - v1.y * v2.x;
 
-        // return nextSegment.x !== prevSegment.x && nextSegment.y !== prevSegment.y;
-    }
+        return crossProduct !== 0 ? (crossProduct < 0 ? 2 : 1) : 0;
+    };
 
     // Las imagenes se hacen mirando hacia la derecha
     const calcOrientation = (snake, index, prevIndex) => {
@@ -58,7 +59,7 @@ const GameArea = ({ snake, apple }) => {
         ctx.imageSmoothingEnabled = false;
 
         // Fondo
-        ctx.fillStyle = 'black';
+        ctx.fillStyle = '#333333';
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Manzana
@@ -75,12 +76,15 @@ const GameArea = ({ snake, apple }) => {
                 const bodyAngle = calcOrientation(snake, index, index + 1);
                 const twist = isTwist(snake, index);
 
-                if (twist) {
-                    drawRotatedImage(ctx, bodyTwistImage, segment.x * CELL_SIZE,
-                        segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
-                } else {
+                if (twist == 0) {
                     drawRotatedImage(ctx, bodyImage, segment.x * CELL_SIZE,
                         segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
+                } else if (twist == 1) {
+                    drawRotatedImage(ctx, bodyTwistImage, segment.x * CELL_SIZE,
+                        segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
+                } else if (twist == 2) {
+                    drawRotatedImage(ctx, bodyTwistImage, segment.x * CELL_SIZE,
+                        segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle + Math.PI / 2);
                 }
             }
         });
