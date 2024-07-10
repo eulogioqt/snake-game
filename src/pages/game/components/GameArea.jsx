@@ -2,12 +2,27 @@ import { useEffect, useRef } from "react";
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
 
-const appleImage = Object.assign(new Image(), { src: "src/assets/apple.png" });
+import appleImageSrc from '/src/assets/apple.png';
+import tailImageSrc from '/src/assets/tail.png';
+import bodyImageSrc from '/src/assets/body.png';
+import bodyTwistImageSrc from '/src/assets/bodyTwist.png';
+import headImageSrc from '/src/assets/head.png';
 
-const tailImage = Object.assign(new Image(), { src: "src/assets/tail.png" });
-const bodyImage = Object.assign(new Image(), { src: "src/assets/body.png" });
-const bodyTwistImage = Object.assign(new Image(), { src: "src/assets/bodyTwist.png" });
-const headImage = Object.assign(new Image(), { src: "src/assets/head.png" });
+const appleImage = new Image();
+appleImage.src = appleImageSrc;
+
+const tailImage = new Image();
+tailImage.src = tailImageSrc;
+
+const bodyImage = new Image();
+bodyImage.src = bodyImageSrc;
+
+const bodyTwistImage = new Image();
+bodyTwistImage.src = bodyTwistImageSrc;
+
+const headImage = new Image();
+headImage.src = headImageSrc;
+
 
 const GameArea = ({ snake, apple }) => {
     const { WIDTH, HEIGHT, CELL_SIZE } = useApp();
