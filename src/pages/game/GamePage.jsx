@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import GameArea from './components/GameArea.jsx';
 import ControlPad from './components/ControlPad.jsx';
 import GameOver from './components/GameOver.jsx';
+import GameWin from './components/GameWin.jsx';
 
 import { useApp, useIsLarge } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
@@ -63,18 +64,24 @@ const GamePage = () => {
             const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
             newSnake.unshift(head); // Desplazamos la cabeza
 
-            if (!appleCollision(newSnake)) newSnake.pop(); // Si no comemos manzana, quitamos la cola
-            else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
-                generateApple(newSnake);
+            if (!appleCollision(newSnake)) {
+                newSnake.pop(); // Si no comemos manzana, quitamos la cola
+
+                const isCollision = checkCollision(newSnake);
+                if (isCollision && !inmortalMode) // Perdemos si hay colisión
+                    setGameStatus(2);
+
+                if (!isCollision || !inmortalMode)
+                    setSnake(newSnake);
+            } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
+                setApple({});
+
+                if (checkWin(newSnake)) setGameStatus(3); // Ganamos si esta el tablero lleno
+                else generateApple(newSnake); // Si no generamos otra manzana
+
                 setScore(prevScore => prevScore + 1);
-            }
-
-            const isCollision = checkCollision(newSnake);
-            if (isCollision && !inmortalMode) setGameStatus(2); // Perdemos si hay colisión
-            else if (checkWin(newSnake)) setGameStatus(3); // Ganamos si esta el tablero lleno
-
-            if (!isCollision || !inmortalMode) // Quitar el or si no quiero que se salga al morir de la pantalla
                 setSnake(newSnake);
+            }
         }
     }, [timer]);
 
@@ -92,6 +99,7 @@ const GamePage = () => {
     return (
         <>
             <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
+            <GameWin gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
 
             <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
                 <div className='position-relative w-100 px-4 text-center'>

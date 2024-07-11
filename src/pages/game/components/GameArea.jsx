@@ -1,32 +1,13 @@
 import { useEffect, useRef } from "react";
+
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
-
-import appleImageSrc from '/src/assets/apple.png';
-import tailImageSrc from '/src/assets/tail.png';
-import bodyImageSrc from '/src/assets/body.png';
-import bodyTwistImageSrc from '/src/assets/bodyTwist.png';
-import headImageSrc from '/src/assets/head.png';
-
-const appleImage = new Image();
-appleImage.src = appleImageSrc;
-
-const tailImage = new Image();
-tailImage.src = tailImageSrc;
-
-const bodyImage = new Image();
-bodyImage.src = bodyImageSrc;
-
-const bodyTwistImage = new Image();
-bodyTwistImage.src = bodyTwistImageSrc;
-
-const headImage = new Image();
-headImage.src = headImageSrc;
-
+import { useSnakeImages } from "./Images.jsx";
 
 const GameArea = ({ snake, apple }) => {
     const { WIDTH, HEIGHT, CELL_SIZE } = useApp();
     const { rack, snakeColor, AIMode } = useSettings();
+    const snakeImages = useSnakeImages(snakeColor);
     const canvasRef = useRef(null);
 
     const drawRotatedImage = (ctx, image, x, y, width, height, angle) => {
@@ -67,6 +48,7 @@ const GameArea = ({ snake, apple }) => {
 
     // Dibuja el canvas en cada actualización de snake o apple
     useEffect(() => {
+        if (!snakeImages) return;
 
         const ctx = canvasRef.current.getContext("2d");
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
@@ -79,7 +61,7 @@ const GameArea = ({ snake, apple }) => {
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Manzana
-        ctx.drawImage(appleImage, apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        ctx.drawImage(snakeImages.apple, apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
         // Dibuja la cuadrícula si está activada
         if (rack) {
@@ -96,7 +78,7 @@ const GameArea = ({ snake, apple }) => {
 
         // Cabeza
         const headAngle = calcOrientation(snake, 0, 1);
-        drawRotatedImage(ctx, headImage, snake[0].x * CELL_SIZE, snake[0].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, headAngle);
+        drawRotatedImage(ctx, snakeImages.head, snake[0].x * CELL_SIZE, snake[0].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, headAngle);
 
         // Cuerpo
         snake.forEach((segment, index) => {
@@ -105,13 +87,13 @@ const GameArea = ({ snake, apple }) => {
                 const twist = isTwist(snake, index);
 
                 if (twist == 0) {
-                    drawRotatedImage(ctx, bodyImage, segment.x * CELL_SIZE,
+                    drawRotatedImage(ctx, snakeImages.body, segment.x * CELL_SIZE,
                         segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
                 } else if (twist == 1) {
-                    drawRotatedImage(ctx, bodyTwistImage, segment.x * CELL_SIZE,
+                    drawRotatedImage(ctx, snakeImages.bodyTwist, segment.x * CELL_SIZE,
                         segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
                 } else if (twist == 2) {
-                    drawRotatedImage(ctx, bodyTwistImage, segment.x * CELL_SIZE,
+                    drawRotatedImage(ctx, snakeImages.bodyTwist, segment.x * CELL_SIZE,
                         segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle + Math.PI / 2);
                 }
             }
@@ -119,8 +101,8 @@ const GameArea = ({ snake, apple }) => {
 
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
-        drawRotatedImage(ctx, tailImage, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, apple, WIDTH, HEIGHT, CELL_SIZE, snakeColor, rack]);
+        drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
+    }, [snake, apple, snakeImages, rack]);
 
     return (
         <canvas ref={canvasRef} width={WIDTH} height={HEIGHT}></canvas>
