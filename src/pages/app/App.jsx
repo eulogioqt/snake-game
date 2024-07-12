@@ -4,7 +4,7 @@ import MenuPage from "../menu/MenuPage";
 import GamePage from "../game/GamePage";
 
 import { useImages } from '../../images/ImagesContext';
-import LoadingScreen from '../../images/LoadingScreen';
+import LoadingScreen from './components/LoadingScreen';
 
 import './App.css';
 
