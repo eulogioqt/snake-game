@@ -7,7 +7,7 @@ import SelectFoodMenu from './SelectFoodMenu';
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
     const { foodIndex, setFoodIndex, rack, setRack, snakeColor, setSnakeColor,
         AIMode, setAIMode, inmortalMode, setInmortalMode } = useSettings();
-    const foodImages = useFoodImages();
+    const { foodImages } = useFoodImages();
 
     const [selectFoodOpen, setSelectFoodOpen] = useState(false);
     const swapSelectFood = () => setSelectFoodOpen(value => !value);

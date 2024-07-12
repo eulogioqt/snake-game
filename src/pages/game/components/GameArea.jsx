@@ -9,7 +9,7 @@ const GameArea = ({ snake, food }) => {
     const { foodIndex, rack, snakeColor, AIMode } = useSettings();
 
     const snakeImages = useSnakeImages(snakeColor);
-    const foodImages = useFoodImages();
+    const { foodImages } = useFoodImages();
 
     const canvasRef = useRef(null);
 
