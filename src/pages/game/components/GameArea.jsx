@@ -2,14 +2,13 @@ import { useEffect, useRef } from "react";
 
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
-import { useFoodImages, useSnakeImages } from "./Images.jsx";
+import { useImages } from "../../../images/ImagesContext.jsx";
 
 const GameArea = ({ snake, food }) => {
     const { WIDTH, HEIGHT, CELL_SIZE } = useApp();
-    const { foodIndex, rack, snakeColor, AIMode } = useSettings();
+    const { foodIndex, rack } = useSettings();
 
-    const snakeImages = useSnakeImages(snakeColor);
-    const { foodImages } = useFoodImages();
+    const { snakeImages, foodImages } = useImages();
 
     const canvasRef = useRef(null);
 
@@ -51,8 +50,6 @@ const GameArea = ({ snake, food }) => {
 
     // Dibuja el canvas en cada actualización de snake o food
     useEffect(() => {
-        if (!snakeImages) return;
-
         const ctx = canvasRef.current.getContext("2d");
         ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
@@ -105,7 +102,7 @@ const GameArea = ({ snake, food }) => {
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
         drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, food, snakeImages, rack]);
+    }, [snake, food]);
 
     return (
         <canvas ref={canvasRef} width={WIDTH} height={HEIGHT}></canvas>

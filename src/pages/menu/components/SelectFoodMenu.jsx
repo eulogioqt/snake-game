@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 
 import { useSettings } from '../context/SettingsContext';
-import { useFoodImages } from '../../game/components/Images';
+import { useImages } from '../../../images/ImagesContext';
 
 const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
     const { foodIndex, setFoodIndex } = useSettings();
-    const { foodImages, foodColor } = useFoodImages();
+    const { foodImages, foodColor } = useImages();
 
     const selectFoodMenuRender = (
         <div className='d-flex align-items-center justify-content-center position-fixed w-100 h-100'
@@ -18,15 +18,15 @@ const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
                         const isSelected = foodIndex === key;
 
                         return (
-                            <div className="col-sm-3 col-6 my-sm-0 my-3 d-flex justify-content-center align-items-center" key={key}>
+                            <div className="col-sm-3 col-6 mb-sm-4 my-4 d-flex justify-content-center align-items-center" key={key}>
                                 <img
                                     src={foodImages[key].src}
                                     style={{
-                                        width: "50px",
-                                        height: "50px",
+                                        width: "48px",
+                                        height: "48px",
                                         imageRendering: "pixelated",
                                         cursor: "pointer",
-                                        transform: isSelected ? "scale(1.5)" : "scale(1)",
+                                        transform: isSelected ? "scale(2)" : "scale(1)",
                                         filter: isSelected ? "drop-shadow(0 0 10px " + foodColor[key] + ")" : "none",
                                         transition: "transform 0.25s, filter 0.25s"
                                     }}
