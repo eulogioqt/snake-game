@@ -1,10 +1,14 @@
 import { useEffect, useState } from 'react';
 
-import appleImageSrc from '/src/assets/apple.png';
 import tailImageSrc from '/src/assets/tail.png';
 import bodyImageSrc from '/src/assets/body.png';
 import bodyTwistImageSrc from '/src/assets/bodyTwist.png';
 import headImageSrc from '/src/assets/head.png';
+
+import appleImageSrc from '/src/assets/apple.png';
+import blueberryImageSrc from '/src/assets/blueberry.png';
+import bananaImageSrc from '/src/assets/banana.png';
+import cherryImageSrc from '/src/assets/cherry.png';
 
 const hexToRgb = (hex) => {
     hex = hex.replace('#', '');
@@ -49,11 +53,7 @@ const replaceImagePixels = (imageObj, replaceColor) => {
 export const useSnakeImages = (snakeColor) => {
     const [snakeImages, setSnakeImages] = useState(undefined);
 
-    const noTintImages = {
-        apple: appleImageSrc,
-    };
-
-    const tintImages = {
+    const images = {
         tail: tailImageSrc,
         body: bodyImageSrc,
         bodyTwist: bodyTwistImageSrc,
@@ -63,17 +63,16 @@ export const useSnakeImages = (snakeColor) => {
     useEffect(() => {
         const loadedImages = {};
         let imagesLoadedCount = 0;
-        const totalImages = Object.keys(tintImages).length + Object.keys(noTintImages).length;
+        const totalImages = Object.keys(images).length;
 
         const checkIfAllImagesLoaded = () => {
-            if (imagesLoadedCount === totalImages) {
+            if (imagesLoadedCount === totalImages)
                 setSnakeImages(loadedImages);
-            }
         };
 
-        Object.keys(tintImages).forEach((key) => {
+        Object.keys(images).forEach((key) => {
             const imageObj = new Image();
-            imageObj.src = tintImages[key];
+            imageObj.src = images[key];
             imageObj.onload = () => {
                 loadedImages[key] = replaceImagePixels(imageObj, snakeColor);
 
@@ -82,16 +81,41 @@ export const useSnakeImages = (snakeColor) => {
             };
         });
 
-        Object.keys(noTintImages).forEach((key) => {
+    }, [snakeColor]);
+
+    return snakeImages;
+};
+
+export const useFoodImages = () => {
+    const [foodImages, setFoodImages] = useState(undefined);
+
+    const images = {
+        apple: appleImageSrc,
+        blueberry: blueberryImageSrc,
+        banana: bananaImageSrc,
+        cherry: cherryImageSrc
+    };
+
+    useEffect(() => {
+        const loadedImages = {};
+        let imagesLoadedCount = 0;
+        const totalImages = Object.keys(images).length;
+
+        const checkIfAllImagesLoaded = () => {
+            if (imagesLoadedCount === totalImages)
+                setFoodImages(loadedImages);
+        };
+
+        Object.keys(images).forEach((key) => {
             const imageObj = new Image();
-            imageObj.src = noTintImages[key];
+            imageObj.src = images[key];
             loadedImages[key] = imageObj;
 
             imagesLoadedCount++;
             checkIfAllImagesLoaded();
         });
 
-    }, [snakeColor]);
+    }, []);
 
-    return snakeImages;
+    return foodImages;
 };
