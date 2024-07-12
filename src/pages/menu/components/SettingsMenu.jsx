@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { GearFill, Palette, Gear, HeartFill } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
 import { useSettings } from '../context/SettingsContext';
-import { useFoodImages } from '../../game/components/Images';
 import SelectFoodMenu from './SelectFoodMenu';
+import { useImages } from '../../../images/ImagesContext';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
-    const { foodIndex, setFoodIndex, rack, setRack, snakeColor, setSnakeColor,
-        AIMode, setAIMode, inmortalMode, setInmortalMode } = useSettings();
-    const { foodImages } = useFoodImages();
+    const { foodIndex, rack, setRack, snakeColor, setSnakeColor, inmortalMode, setInmortalMode } = useSettings();
+    const { foodImages } = useImages();
 
     const [selectFoodOpen, setSelectFoodOpen] = useState(false);
     const swapSelectFood = () => setSelectFoodOpen(value => !value);
