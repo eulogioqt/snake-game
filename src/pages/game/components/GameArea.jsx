@@ -2,12 +2,15 @@ import { useEffect, useRef } from "react";
 
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
-import { useSnakeImages } from "./Images.jsx";
+import { useFoodImages, useSnakeImages } from "./Images.jsx";
 
-const GameArea = ({ snake, apple }) => {
+const GameArea = ({ snake, food }) => {
     const { WIDTH, HEIGHT, CELL_SIZE } = useApp();
-    const { rack, snakeColor, AIMode } = useSettings();
+    const { foodIndex, rack, snakeColor, AIMode } = useSettings();
+
     const snakeImages = useSnakeImages(snakeColor);
+    const { foodImages } = useFoodImages();
+
     const canvasRef = useRef(null);
 
     const drawRotatedImage = (ctx, image, x, y, width, height, angle) => {
@@ -46,7 +49,7 @@ const GameArea = ({ snake, apple }) => {
         return r;
     }
 
-    // Dibuja el canvas en cada actualización de snake o apple
+    // Dibuja el canvas en cada actualización de snake o food
     useEffect(() => {
         if (!snakeImages) return;
 
@@ -61,7 +64,7 @@ const GameArea = ({ snake, apple }) => {
         ctx.fillRect(0, 0, WIDTH, HEIGHT);
 
         // Manzana
-        ctx.drawImage(snakeImages.apple, apple.x * CELL_SIZE, apple.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        ctx.drawImage(foodImages[foodIndex], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
         // Dibuja la cuadrícula si está activada
         if (rack) {
@@ -102,7 +105,7 @@ const GameArea = ({ snake, apple }) => {
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
         drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, apple, snakeImages, rack]);
+    }, [snake, food, snakeImages, rack]);
 
     return (
         <canvas ref={canvasRef} width={WIDTH} height={HEIGHT}></canvas>

@@ -23,7 +23,7 @@ export const AppProvider = ({ children }) => {
         39: [1, 0] // right
     };
 
-    const APPLE_START = { x: 5, y: 1 };
+    const FOOD_START = { x: 5, y: 1 };
 
     return (
         <AppContext.Provider
@@ -35,7 +35,7 @@ export const AppProvider = ({ children }) => {
                 DIR_START,
                 SNAKE_START,
                 DIRECTIONS,
-                APPLE_START,
+                FOOD_START,
                 handlePageIndex,
                 getPageIndex,
             }}
