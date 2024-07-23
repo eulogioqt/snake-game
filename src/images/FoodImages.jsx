@@ -5,38 +5,7 @@ import blueberryImageSrc from '/src/assets/blueberry.png';
 import bananaImageSrc from '/src/assets/banana.png';
 import cherryImageSrc from '/src/assets/cherry.png';
 
-const rgbToHex = (dec) => {
-    let hex = dec.toString(16);
-    return hex.length === 1 ? '0' + hex : hex;
-};
-
-const getAverageColor = (imageObj) => {
-    if (!imageObj || imageObj.width === 0) return [0, 0, 0];
-
-    const canvas = document.createElement('canvas');
-    canvas.width = imageObj.width;
-    canvas.height = imageObj.height;
-    const ctx = canvas.getContext('2d');
-
-    ctx.drawImage(imageObj, 0, 0);
-
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-    const data = imageData.data;
-
-    let [r, g, b, n] = [0, 0, 0, 0];
-    for (let i = 0; i < data.length; i += 4) {
-        if (data[i] > 10) {
-            r += data[i];
-            g += data[i + 1];
-            b += data[i + 2];
-            n++;
-        }
-    }
-
-    const [R, G, B] = [Math.round(r / n), Math.round(g / n), Math.round(b / n)];
-
-    return "#" + rgbToHex(R) + rgbToHex(G) + rgbToHex(B);;
-};
+import { getAverageColor } from './ImageUtils';
 
 export const useFoodImages = () => {
     const [foodImages, setFoodImages] = useState(undefined);

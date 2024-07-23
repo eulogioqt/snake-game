@@ -1,7 +1,9 @@
 import React from 'react';
+import { useIsLarge } from '../../app/AppContext';
 
 const ControlPad = ({ onKeyDown }) => {
     const handleKeyDown = (keyCode) => onKeyDown(keyCode);
+    const isLarge = useIsLarge();
 
     const buttonStyle = {
         height: "75px",
@@ -10,7 +12,7 @@ const ControlPad = ({ onKeyDown }) => {
     };
 
     return (
-        <div className="d-flex flex-column align-items-center">
+        <div className="flex-column align-items-center" style={{ display: isLarge ? "none" : "flex" }}>
             <div className="mt-5">
                 <div className='d-flex justify-content-center'>
                     <button

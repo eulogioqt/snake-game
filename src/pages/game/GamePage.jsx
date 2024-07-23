@@ -9,7 +9,7 @@ import { useApp, useIsLarge } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 
 const GamePage = () => {
-    const { SPEED, WIDTH, HEIGHT, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
+    const { SPEED, WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { inmortalMode } = useSettings();
     const isLarge = useIsLarge();
 
@@ -18,14 +18,17 @@ const GamePage = () => {
     const [snake, setSnake] = useState(SNAKE_START);
     const [food, setFood] = useState(FOOD_START);
     const [score, setScore] = useState(0);
+
+    const [nextDir, setNextDir] = useState([]);
     const [dir, setDir] = useState(DIR_START);
+
     const [gameStatus, setGameStatus] = useState(0); // 0 Not Started, 1 Started, 2 GameOver (3 Win)
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
     const generateFood = (snake) => {
         let newFood;
         do {
-            newFood = { x: getRandomInt(WIDTH / CELL_SIZE), y: getRandomInt(HEIGHT / CELL_SIZE) };
+            newFood = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
         } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
 
         setFood(newFood);
@@ -33,17 +36,30 @@ const GamePage = () => {
 
     const foodCollision = (snake) => food !== undefined && snake[0].x === food.x && snake[0].y === food.y;
     const bodyCollision = (snake) => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
-    const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH / CELL_SIZE || snake[0].y >= HEIGHT / CELL_SIZE;
+    const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = (snake) => bodyCollision(snake) || wallCollision(snake);
-    const checkWin = (snake) => snake.length === (WIDTH / CELL_SIZE) * (HEIGHT / CELL_SIZE);
+    const checkWin = (snake) => snake.length === (WIDTH_CELLS) * (HEIGHT_CELLS);
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
-        if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y)) {
-            setDir(newDir);
-            if (gameStatus == 0) // Si el juego esta parado
-                setGameStatus(1); // Inicio el juego
+
+        if (newDir) {
+            setNextDir(actualNextDir => {
+                const updatedNextDir = [...actualNextDir];
+
+                // Si la cola esta llena, reemplazamos el ultimo, si no añadimos al final
+                if (updatedNextDir.length >= 2) updatedNextDir[1] = newDir;
+                else updatedNextDir.push(newDir);
+
+                return updatedNextDir;
+            });
+
+            if (gameStatus === 0) { // Si el juego no esta iniciado
+                const [dx, dy] = newDir; // Si es un primer movimiento valido
+                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y)
+                    setGameStatus(1); // Iniciamos el juego
+            }
         }
-    }
+    };
 
     useEffect(() => {
         if (gameStatus === 1) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
@@ -58,10 +74,27 @@ const GamePage = () => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
 
-    useEffect(() => { // THIS METHOD EXECTES EACH TICK
+    useEffect(() => { // THIS METHOD EXECUTES EACH TICK
         if (gameStatus == 1) { // Si el juego está en marcha
+            let actualDir;
+
+            let i = 0;
+            while (i < nextDir.length && actualDir === undefined) {
+                const [dx, dy] = nextDir[i];
+                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y)
+                    actualDir = nextDir[i];
+
+                i++;
+            }
+
+            if (actualDir === undefined) actualDir = dir;
+            else {
+                setDir(actualDir);
+                setNextDir(actualNextDir => actualNextDir.slice(i));
+            }
+
             const newSnake = [...snake];
-            const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
+            const head = { x: newSnake[0].x + actualDir[0], y: newSnake[0].y + actualDir[1] };
             newSnake.unshift(head); // Desplazamos la cabeza
 
             if (!foodCollision(newSnake)) {
@@ -91,6 +124,7 @@ const GamePage = () => {
         setSnake(SNAKE_START);
         setFood(FOOD_START);
         setScore(0);
+        setNextDir([]);
         setDir(DIR_START);
         setGameStatus(0);
     }
@@ -104,7 +138,7 @@ const GamePage = () => {
             <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
                 <div className='position-relative w-100 px-4 text-center'>
                     <div className='d-flex justify-content-center'>
-                        <div className={`d-flex justify-content-${isLarge ? "end" : "center"}`} style={{ width: WIDTH }}>
+                        <div className={`d-flex justify-content-${isLarge ? "end" : "center"}`} style={{ width: WIDTH_CELLS * CELL_SIZE }}>
                             <button className={`btn btn-danger mb-0 ${isLarge ? "position-absolute mt-5" : "mt-2"}`} onClick={() => handlePageIndex(0)}>
                                 Salir
                             </button>
