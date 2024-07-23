@@ -19,6 +19,7 @@ const GamePage = () => {
     const [food, setFood] = useState(FOOD_START);
     const [score, setScore] = useState(0);
     const [dir, setDir] = useState(DIR_START);
+    const [nextDir, setNextDir] = useState([]);
     const [gameStatus, setGameStatus] = useState(0); // 0 Not Started, 1 Started, 2 GameOver (3 Win)
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
@@ -38,12 +39,21 @@ const GamePage = () => {
     const checkWin = (snake) => snake.length === (WIDTH / CELL_SIZE) * (HEIGHT / CELL_SIZE);
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
-        if (newDir && (snake[0].x + newDir[0] !== snake[1].x || snake[0].y + newDir[1] !== snake[1].y)) {
-            setDir(newDir);
-            if (gameStatus == 0) // Si el juego esta parado
-                setGameStatus(1); // Inicio el juego
+
+        if (newDir) {
+            setNextDir(actualNextDir => {
+                const updatedNextDir = [...actualNextDir];
+
+                // Si la cola esta llena, reemplazamos el ultimo, si no añadimos al final
+                if (updatedNextDir.length >= 2) updatedNextDir[1] = newDir;
+                else updatedNextDir.push(newDir);
+
+                return updatedNextDir;
+            });
+
+            if (gameStatus === 0) setGameStatus(1); // Iniciamos el juego si está parado
         }
-    }
+    };
 
     useEffect(() => {
         if (gameStatus === 1) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
@@ -58,10 +68,27 @@ const GamePage = () => {
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
 
-    useEffect(() => { // THIS METHOD EXECTES EACH TICK
+    useEffect(() => { // THIS METHOD EXECUTES EACH TICK
         if (gameStatus == 1) { // Si el juego está en marcha
+            let actualDir;
+
+            let i = 0;
+            while (i < nextDir.length && actualDir === undefined) {
+                const [dx, dy] = nextDir[i];
+                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y)
+                    actualDir = nextDir[i];
+
+                i++;
+            }
+
+            if (actualDir === undefined) actualDir = dir;
+            else {
+                setDir(actualDir);
+                setNextDir(actualNextDir => actualNextDir.slice(i));
+            }
+
             const newSnake = [...snake];
-            const head = { x: newSnake[0].x + dir[0], y: newSnake[0].y + dir[1] };
+            const head = { x: newSnake[0].x + actualDir[0], y: newSnake[0].y + actualDir[1] };
             newSnake.unshift(head); // Desplazamos la cabeza
 
             if (!foodCollision(newSnake)) {
@@ -91,6 +118,7 @@ const GamePage = () => {
         setSnake(SNAKE_START);
         setFood(FOOD_START);
         setScore(0);
+        setNextDir([]);
         setDir(DIR_START);
         setGameStatus(0);
     }
