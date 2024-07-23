@@ -5,7 +5,7 @@ import { useSettings } from "../../menu/context/SettingsContext";
 import { useImages } from "../../../images/ImagesContext.jsx";
 
 const GameArea = ({ snake, food }) => {
-    const { WIDTH, HEIGHT, CELL_SIZE } = useApp();
+    const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
     const { foodIndex, rack } = useSettings();
 
     const { snakeImages, foodImages } = useImages();
@@ -51,29 +51,26 @@ const GameArea = ({ snake, food }) => {
     // Dibuja el canvas en cada actualización de snake o food
     useEffect(() => {
         const ctx = canvasRef.current.getContext("2d");
-        ctx.clearRect(0, 0, WIDTH, HEIGHT);
+        ctx.clearRect(0, 0, WIDTH_CELLS * CELL_SIZE, HEIGHT_CELLS * CELL_SIZE);
 
         // Desactivar el suavizado de la imagen (hace que las imagenes 16x16 escalen bien)
         ctx.imageSmoothingEnabled = false;
 
         // Fondo
         ctx.fillStyle = '#333333';
-        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        ctx.fillRect(0, 0, WIDTH_CELLS * CELL_SIZE, HEIGHT_CELLS * CELL_SIZE);
 
         // Manzana
         ctx.drawImage(foodImages[foodIndex], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
 
         // Dibuja la cuadrícula si está activada
         if (rack) {
-            const WIDTH_CELLS = WIDTH / CELL_SIZE;
-            const HEIGHT_CELLS = HEIGHT / CELL_SIZE;
-
             ctx.fillStyle = 'white';
             for (let i = 0; i < WIDTH_CELLS; i++)
-                ctx.fillRect(i * CELL_SIZE, 0, 1, HEIGHT);
+                ctx.fillRect(i * CELL_SIZE, 0, 1, HEIGHT_CELLS * CELL_SIZE);
 
             for (let i = 0; i < HEIGHT_CELLS; i++)
-                ctx.fillRect(0, i * CELL_SIZE, WIDTH, 1);
+                ctx.fillRect(0, i * CELL_SIZE, WIDTH_CELLS * CELL_SIZE, 1);
         }
 
         // Cabeza
@@ -105,7 +102,7 @@ const GameArea = ({ snake, food }) => {
     }, [snake, food]);
 
     return (
-        <canvas ref={canvasRef} width={WIDTH} height={HEIGHT}></canvas>
+        <canvas ref={canvasRef} width={WIDTH_CELLS * CELL_SIZE} height={HEIGHT_CELLS * CELL_SIZE}></canvas>
     );
 }
 

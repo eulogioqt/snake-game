@@ -9,7 +9,7 @@ import { useApp, useIsLarge } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 
 const GamePage = () => {
-    const { SPEED, WIDTH, HEIGHT, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
+    const { SPEED, WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { inmortalMode } = useSettings();
     const isLarge = useIsLarge();
 
@@ -26,7 +26,7 @@ const GamePage = () => {
     const generateFood = (snake) => {
         let newFood;
         do {
-            newFood = { x: getRandomInt(WIDTH / CELL_SIZE), y: getRandomInt(HEIGHT / CELL_SIZE) };
+            newFood = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
         } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
 
         setFood(newFood);
@@ -34,9 +34,9 @@ const GamePage = () => {
 
     const foodCollision = (snake) => food !== undefined && snake[0].x === food.x && snake[0].y === food.y;
     const bodyCollision = (snake) => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
-    const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH / CELL_SIZE || snake[0].y >= HEIGHT / CELL_SIZE;
+    const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = (snake) => bodyCollision(snake) || wallCollision(snake);
-    const checkWin = (snake) => snake.length === (WIDTH / CELL_SIZE) * (HEIGHT / CELL_SIZE);
+    const checkWin = (snake) => snake.length === (WIDTH_CELLS) * (HEIGHT_CELLS);
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
 
@@ -51,7 +51,11 @@ const GamePage = () => {
                 return updatedNextDir;
             });
 
-            if (gameStatus === 0) setGameStatus(1); // Iniciamos el juego si está parado
+            if (gameStatus === 0) { // Si el juego no esta iniciado
+                const [dx, dy] = newDir; // Si es un primer movimiento valido
+                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y)
+                    setGameStatus(1); // Iniciamos el juego
+            }
         }
     };
 
@@ -132,7 +136,7 @@ const GamePage = () => {
             <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
                 <div className='position-relative w-100 px-4 text-center'>
                     <div className='d-flex justify-content-center'>
-                        <div className={`d-flex justify-content-${isLarge ? "end" : "center"}`} style={{ width: WIDTH }}>
+                        <div className={`d-flex justify-content-${isLarge ? "end" : "center"}`} style={{ width: WIDTH_CELLS * CELL_SIZE }}>
                             <button className={`btn btn-danger mb-0 ${isLarge ? "position-absolute mt-5" : "mt-2"}`} onClick={() => handlePageIndex(0)}>
                                 Salir
                             </button>
