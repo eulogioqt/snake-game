@@ -12,20 +12,16 @@ export const AppProvider = ({ children }) => {
 
     const SPEED = 100;
 
-    const WIDTH_CELLS = 17;
-    const HEIGHT_CELLS = 15;
+    const WIDTH_CELLS = isLarge ? 17 : 11; // PC 15x17
+    const HEIGHT_CELLS = isLarge ? 15 : 21; // MOBILE 11x21
     const CELL_SIZE = Math.min(
-        Math.floor(window.innerWidth * (isLarge ? 0.8 : 0.85) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
+        Math.floor(window.innerWidth * (isLarge ? 0.8 : 0.95) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
         Math.floor(window.innerHeight * (isLarge ? 0.8 : 0.6) / (HEIGHT_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS
     );
 
-    // const CELL_SIZE = 32;
-    // const WIDTH = Math.floor(window.innerWidth * 75 / (100 * CELL_SIZE)) * CELL_SIZE;
-    // const HEIGHT = Math.floor(window.innerHeight * 50 / (100 * CELL_SIZE)) * CELL_SIZE;
-
     const DIR_START = [1, 0];
-    const SNAKE_START = [{ x: 3, y: 7 }, { x: 2, y: 7 }];
-    const FOOD_START = { x: 12, y: 7 };
+    const SNAKE_START = [{ x: 3, y: (HEIGHT_CELLS - 1) / 2 }, { x: 2, y: (HEIGHT_CELLS - 1) / 2 }];
+    const FOOD_START = { x: WIDTH_CELLS - 3, y: (HEIGHT_CELLS - 1) / 2 };
 
     const DIRECTIONS = {
         38: [0, -1],  // up (arrow)
