@@ -13,7 +13,7 @@ export const AppProvider = ({ children }) => {
     const SPEED = 150;
 
     const WIDTH_CELLS = isLarge ? 17 : 13; // PC 15x17
-    const HEIGHT_CELLS = isLarge ? 15 : 19; // MOBILE 11x19
+    const HEIGHT_CELLS = isLarge ? 15 : 19; // MOBILE 13x19 // ON GOOGLE IS 11x21
     const CELL_SIZE = Math.min(
         Math.floor(window.innerWidth * (isLarge ? 0.8 : 0.95) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
         Math.floor(window.innerHeight * (isLarge ? 0.8 : 0.6) / (HEIGHT_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS

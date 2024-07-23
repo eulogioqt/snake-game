@@ -5,7 +5,8 @@ import SelectFoodMenu from './SelectFoodMenu';
 import { useImages } from '../../../images/ImagesContext';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
-    const { foodIndex, rack, setRack, snakeColor, setSnakeColor, inmortalMode, setInmortalMode } = useSettings();
+    const { foodIndex, rack, setRack, snakeColor, setSnakeColor,
+        inmortalMode, setInmortalMode, AIMode, setAIMode } = useSettings();
     const { foodImages } = useImages();
 
     const [selectFoodOpen, setSelectFoodOpen] = useState(false);
@@ -70,24 +71,24 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                         </div>
                     </div>
 
-                    {/* Opción para activar/desactivar el modo inteligencia artificial *
-                <div className="mb-4">
-                    <div className='d-flex align-items-center justify-content-between'>
-                        <div className='d-flex align-items-center'>
-                            <Gear size={30} className="me-3 flex-shrink-0" />
-                            <h5 className='mb-0 me-3'>Modo inteligencia artificial</h5>
-                        </div>
-                        <div className="form-check form-switch">
-                            <input
-                                className="form-check-input"
-                                type="checkbox"
-                                checked={AIMode}
-                                onChange={() => setAIMode(AIMode => !AIMode);}
-                                style={{ width: "40px", height: "25px" }}
-                            />
+                    {/* Opción para activar/desactivar el modo inteligencia artificial */}
+                    <div className="mb-4">
+                        <div className='d-flex align-items-center justify-content-between'>
+                            <div className='d-flex align-items-center'>
+                                <Gear size={30} className="me-3 flex-shrink-0" />
+                                <h5 className='mb-0 me-3'>Modo inteligencia artificial</h5>
+                            </div>
+                            <div className="form-check form-switch">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    checked={AIMode}
+                                    onChange={() => setAIMode(AIMode => !AIMode)}
+                                    style={{ width: "40px", height: "25px" }}
+                                />
+                            </div>
                         </div>
                     </div>
-                </div>*/}
 
                     {/* Opción para activar/desactivar el modo inmortal */}
                     <div className="mb-4">

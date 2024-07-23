@@ -4,13 +4,14 @@ import GameArea from './components/GameArea.jsx';
 import ControlPad from './components/ControlPad.jsx';
 import GameOver from './components/GameOver.jsx';
 import GameWin from './components/GameWin.jsx';
+import SnakeAI from './components/SnakeAI.jsx';
 
 import { useApp, useIsLarge } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 
 const GamePage = () => {
     const { SPEED, WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
-    const { inmortalMode } = useSettings();
+    const { inmortalMode, AIMode } = useSettings();
     const isLarge = useIsLarge();
 
     const [timer, setTimer] = useState(0);
@@ -70,7 +71,9 @@ const GamePage = () => {
 
     useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
-        document.addEventListener('keydown', handleKeyDown);
+        if (!AIMode) // Si esta en modo automatico no queremos que intervenga el usuario
+            document.addEventListener('keydown', handleKeyDown);
+
         return () => document.removeEventListener('keydown', handleKeyDown);
     }, [snake]);
 
@@ -155,6 +158,8 @@ const GamePage = () => {
                     <ControlPad onKeyDown={handleDir} />
                 </div>
             </div>
+
+            <SnakeAI snake={snake} food={food} AIMode={AIMode} moveSnake={handleDir} />
         </>
     );
 };
