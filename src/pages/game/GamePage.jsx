@@ -18,8 +18,10 @@ const GamePage = () => {
     const [snake, setSnake] = useState(SNAKE_START);
     const [food, setFood] = useState(FOOD_START);
     const [score, setScore] = useState(0);
-    const [dir, setDir] = useState(DIR_START);
+
     const [nextDir, setNextDir] = useState([]);
+    const [dir, setDir] = useState(DIR_START);
+
     const [gameStatus, setGameStatus] = useState(0); // 0 Not Started, 1 Started, 2 GameOver (3 Win)
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);

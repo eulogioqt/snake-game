@@ -1,17 +1,23 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AppContext = createContext();
+const SPRITE_PIXELS = 8; // (16x16)
 
 export const AppProvider = ({ children }) => {
     const [pageIndex, setPageIndex] = useState(0);
     const getPageIndex = () => pageIndex;
     const handlePageIndex = (pageIndex) => setPageIndex(pageIndex);
 
+    const isLarge = useIsLarge();
+
     const SPEED = 100;
 
     const WIDTH_CELLS = 17;
     const HEIGHT_CELLS = 15;
-    const CELL_SIZE = 32;
+    const CELL_SIZE = Math.min(
+        Math.floor(window.innerWidth * (isLarge ? 0.8 : 0.85) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
+        Math.floor(window.innerHeight * (isLarge ? 0.8 : 0.6) / (HEIGHT_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS
+    );
 
     // const CELL_SIZE = 32;
     // const WIDTH = Math.floor(window.innerWidth * 75 / (100 * CELL_SIZE)) * CELL_SIZE;
@@ -54,10 +60,10 @@ export const AppProvider = ({ children }) => {
 
 export const useApp = () => useContext(AppContext);
 export const useIsLarge = () => {
-    const [isLarge, setIsLarge] = useState(window.innerWidth >= 576);
+    const [isLarge, setIsLarge] = useState(window.innerWidth > 768);
 
     useEffect(() => {
-        const handleResize = () => setIsLarge(window.innerWidth >= 576);
+        const handleResize = () => setIsLarge(window.innerWidth > 768);
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
