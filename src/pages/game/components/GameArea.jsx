@@ -57,8 +57,12 @@ const GameArea = ({ snake, food }) => {
         ctx.imageSmoothingEnabled = false;
 
         // Fondo
-        ctx.fillStyle = '#333333';
-        ctx.fillRect(0, 0, WIDTH_CELLS * CELL_SIZE, HEIGHT_CELLS * CELL_SIZE);
+        for (let i = 0; i <= WIDTH_CELLS; i++) {
+            for (let j = 0; j <= HEIGHT_CELLS; j++) {
+                ctx.fillStyle = ((i + j) % 2 == 0) ? '#AAD751' : '#A2D149';
+                ctx.fillRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            }
+        }
 
         // Manzana
         ctx.drawImage(foodImages[foodIndex], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
@@ -102,7 +106,14 @@ const GameArea = ({ snake, food }) => {
     }, [snake, food]);
 
     return (
-        <canvas ref={canvasRef} width={WIDTH_CELLS * CELL_SIZE} height={HEIGHT_CELLS * CELL_SIZE}></canvas>
+        <div className="position-relative d-flex justify-content-center align-items-center"
+            style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: (HEIGHT_CELLS + 2) * CELL_SIZE, backgroundColor: "#578A34" }}>
+            {/*<button className="btn btn-primary position-absolute" style={{ top: 8, left: 8 }}>Arriba Izquierda</button>
+            <button className="btn btn-primary position-absolute" style={{ top: 8, right: 8 }}>Arriba Derecha</button>
+            <button className="btn btn-primary position-absolute" style={{ bottom: 8, left: 8 }}>Abajo Izquierda</button>
+            <button className="btn btn-primary position-absolute" style={{ bottom: 8, right: 8 }}>Abajo Derecha</button>*/}
+            <canvas ref={canvasRef} width={WIDTH_CELLS * CELL_SIZE} height={HEIGHT_CELLS * CELL_SIZE}></canvas>
+        </div>
     );
 }
 

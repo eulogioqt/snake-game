@@ -6,12 +6,17 @@ import GameOver from './components/GameOver.jsx';
 import GameWin from './components/GameWin.jsx';
 import SnakeAI from './components/SnakeAI.jsx';
 
+import timeImageSrc from '/src/assets/time.png';
+
 import { useApp, useIsLarge } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
+import { useImages } from '../../images/ImagesContext.jsx';
 
 const GamePage = () => {
     const { SPEED, WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
-    const { inmortalMode, AIMode } = useSettings();
+    const { inmortalMode, AIMode, foodIndex } = useSettings();
+    const { foodImages } = useImages();
+
     const isLarge = useIsLarge();
 
     const [timer, setTimer] = useState(0);
@@ -139,20 +144,39 @@ const GamePage = () => {
             <GameWin gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
 
             <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
-                <div className='position-relative w-100 px-4 text-center'>
-                    <div className='d-flex justify-content-center'>
-                        <div className={`d-flex justify-content-${isLarge ? "end" : "center"}`} style={{ width: WIDTH_CELLS * CELL_SIZE }}>
-                            <button className={`btn btn-danger mb-0 ${isLarge ? "position-absolute mt-5" : "mt-2"}`} onClick={() => handlePageIndex(0)}>
+                <div className="d-flex flex-column">
+                    <div className="d-flex justify-content-between align-items-center"
+                        style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: 2 * CELL_SIZE, backgroundColor: "#4A752C" }}>
+                        <div className='d-flex' style={{ marginLeft: CELL_SIZE }}>
+                            <div className='d-flex justify-content-center align-items-center' style={{ marginRight: CELL_SIZE }}>
+                                <img style={{
+                                    width: CELL_SIZE,
+                                    height: CELL_SIZE,
+                                    marginRight: CELL_SIZE / 4,
+                                    imageRendering: 'pixelated'
+                                }} src={foodImages[foodIndex].src}></img>
+                                <span className='text-white fw-bold'
+                                    style={{ fontSize: CELL_SIZE / 1.5 }}>{score}</span>
+                            </div>
+                            <div className='d-flex justify-content-center align-items-center'>
+                                <img style={{
+                                    width: CELL_SIZE,
+                                    height: CELL_SIZE,
+                                    marginRight: CELL_SIZE / 4,
+                                    imageRendering: 'pixelated'
+                                }} src={timeImageSrc}></img>
+                                <span className='text-white fw-bold'
+                                    style={{ fontSize: CELL_SIZE / 1.5 }}>{time}</span>
+                            </div>
+                        </div>
+                        <div style={{ marginRight: CELL_SIZE }}>
+                            <button className={`btn btn-danger`} onClick={() => handlePageIndex(0)}>
                                 Salir
                             </button>
                         </div>
                     </div>
-                    <div className='mb-3'>
-                        <h1 className='display-4'>Snake Game</h1>
-                        <h2 className='lead'>Score: {score} | Time: {time}s</h2>
-                    </div>
+                    <GameArea snake={snake} food={food} />
                 </div>
-                <GameArea snake={snake} food={food} />
 
                 <div className='mt-3'>
                     <ControlPad onKeyDown={handleDir} />
