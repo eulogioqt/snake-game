@@ -106,7 +106,8 @@ const GameArea = ({ snake, food }) => {
     }, [snake, food]);
 
     return (
-        <div className="position-relative" style={{ width: WIDTH_CELLS * CELL_SIZE, height: HEIGHT_CELLS * CELL_SIZE }}>
+        <div className="position-relative d-flex justify-content-center align-items-center"
+            style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: (HEIGHT_CELLS + 2) * CELL_SIZE, backgroundColor: "#578A34" }}>
             {/*<button className="btn btn-primary position-absolute" style={{ top: 8, left: 8 }}>Arriba Izquierda</button>
             <button className="btn btn-primary position-absolute" style={{ top: 8, right: 8 }}>Arriba Derecha</button>
             <button className="btn btn-primary position-absolute" style={{ bottom: 8, left: 8 }}>Abajo Izquierda</button>
