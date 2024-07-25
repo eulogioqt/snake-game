@@ -1,10 +1,12 @@
 import { useEffect, useRef } from "react";
 
+import arrowsTutorialSrc from '/src/assets/arrowsTutorial.png';
+
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
 import { useImages } from "../../../images/ImagesContext.jsx";
 
-const GameArea = ({ snake, food }) => {
+const GameArea = ({ snake, food, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
     const { foodIndex, rack } = useSettings();
 
@@ -105,6 +107,17 @@ const GameArea = ({ snake, food }) => {
         drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
     }, [snake, food]);
 
+    const arrowsTutorial = (
+        gameStatus === 0 &&
+        <img src={arrowsTutorialSrc} style={{
+            position: "absolute",
+            width: CELL_SIZE * 4,
+            height: CELL_SIZE * 4,
+            top: CELL_SIZE * 3,
+            imageRendering: 'pixelated'
+        }}></img>
+    );
+
     return (
         <div className="position-relative d-flex justify-content-center align-items-center"
             style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: (HEIGHT_CELLS + 2) * CELL_SIZE, backgroundColor: "#578A34" }}>
@@ -112,6 +125,7 @@ const GameArea = ({ snake, food }) => {
             <button className="btn btn-primary position-absolute" style={{ top: 8, right: 8 }}>Arriba Derecha</button>
             <button className="btn btn-primary position-absolute" style={{ bottom: 8, left: 8 }}>Abajo Izquierda</button>
             <button className="btn btn-primary position-absolute" style={{ bottom: 8, right: 8 }}>Abajo Derecha</button>*/}
+            {arrowsTutorial}
             <canvas ref={canvasRef} width={WIDTH_CELLS * CELL_SIZE} height={HEIGHT_CELLS * CELL_SIZE}></canvas>
         </div>
     );

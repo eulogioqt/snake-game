@@ -1,3 +1,8 @@
-.monospace {
-    font-family: 'Courier New', Courier, monospace;
+@font-face {
+    font-family: 'Pixelon';
+    src: url('/src/assets/fonts/pixelon.ttf') format('truetype');
+}
+
+body {
+    font-family: 'Pixelon', sans-serif;
 }

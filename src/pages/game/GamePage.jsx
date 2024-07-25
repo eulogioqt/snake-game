@@ -17,8 +17,6 @@ const GamePage = () => {
     const { inmortalMode, AIMode, foodIndex } = useSettings();
     const { foodImages } = useImages();
 
-    const isLarge = useIsLarge();
-
     const [timer, setTimer] = useState(0);
 
     const [snake, setSnake] = useState(SNAKE_START);
@@ -178,7 +176,8 @@ const GamePage = () => {
                             </button>
                         </div>
                     </div>
-                    <GameArea snake={snake} food={food} />
+
+                    <GameArea snake={snake} food={food} gameStatus={gameStatus} />
                 </div>
 
 
