@@ -6,10 +6,9 @@ import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
 import { useImages } from "../../../images/ImagesContext.jsx";
 
-const GameArea = ({ snake, food, gameStatus }) => {
+const GameArea = ({ snake, foodList, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
     const { foodIndex, rack } = useSettings();
-
     const { snakeImages, foodImages } = useImages();
 
     const canvasRef = useRef(null);
@@ -66,8 +65,16 @@ const GameArea = ({ snake, food, gameStatus }) => {
             }
         }
 
-        // Manzana
-        ctx.drawImage(foodImages[foodIndex], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        // Comida
+        const foodTypes = Object.keys(foodImages);
+
+        foodList.forEach(food => {
+            let foodKey = foodIndex;
+            if (foodKey === "random")
+                foodKey = foodTypes[Math.floor(Math.random() * foodTypes.length)]
+
+            ctx.drawImage(foodImages[foodKey], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        });
 
         // Dibuja la cuadrícula si está activada
         if (rack) {
@@ -105,7 +112,7 @@ const GameArea = ({ snake, food, gameStatus }) => {
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
         drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, food]);
+    }, [snake, foodList, CELL_SIZE]);
 
     const arrowsTutorial = (
         gameStatus === 0 &&

@@ -7,20 +7,24 @@ import GameWin from './components/GameWin.jsx';
 import SnakeAI from './components/SnakeAI.jsx';
 
 import timeImageSrc from '/src/assets/time.png';
+import randomFoodSrc from '/src/assets/randomFood.png';
 
-import { useApp, useIsLarge } from '../app/AppContext.jsx';
+import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 import { useImages } from '../../images/ImagesContext.jsx';
 
 const GamePage = () => {
-    const { SPEED, WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
-    const { inmortalMode, AIMode, foodIndex } = useSettings();
+    const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
+    const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
+    const { tickTime } = useSettings();
 
     const [timer, setTimer] = useState(0);
+    const [startTime, setStartTime] = useState(undefined);
+    const [finishTime, setFinishTime] = useState(undefined);
 
     const [snake, setSnake] = useState(SNAKE_START);
-    const [food, setFood] = useState(FOOD_START);
+    const [foodList, setFoodList] = useState([FOOD_START]);
     const [score, setScore] = useState(0);
 
     const [nextDir, setNextDir] = useState([]);
@@ -29,20 +33,26 @@ const GamePage = () => {
     const [gameStatus, setGameStatus] = useState(0); // 0 Not Started, 1 Started, 2 GameOver (3 Win)
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
-    const generateFood = (snake) => {
-        let newFood;
-        do {
-            newFood = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
-        } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+    const generateFood = (snake, foodList) => {
+        let newFoodList = [...foodList];
 
-        setFood(newFood);
+        while (newFoodList.length < foodAmount && ((WIDTH_CELLS * HEIGHT_CELLS) - snake.length) > newFoodList.length) {
+            const generatedFood = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
+            const isOnSnake = snake.some(segment => segment.x === generatedFood.x && segment.y === generatedFood.y);
+            const isOnFood = newFoodList.some(food => food.x === generatedFood.x && food.y === generatedFood.y);
+
+            if (!isOnSnake && !isOnFood)
+                newFoodList.push(generatedFood);
+        }
+
+        setFoodList(newFoodList);
     };
 
-    const foodCollision = (snake) => food !== undefined && snake[0].x === food.x && snake[0].y === food.y;
+    const foodCollision = (snake) => foodList.filter(food => snake[0].x === food.x && snake[0].y === food.y)[0];
     const bodyCollision = (snake) => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
     const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = (snake) => bodyCollision(snake) || wallCollision(snake);
-    const checkWin = (snake) => snake.length === (WIDTH_CELLS) * (HEIGHT_CELLS);
+    const checkWin = (snake) => snake.length === (WIDTH_CELLS * HEIGHT_CELLS);
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
 
@@ -59,15 +69,17 @@ const GamePage = () => {
 
             if (gameStatus === 0) { // Si el juego no esta iniciado
                 const [dx, dy] = newDir; // Si es un primer movimiento valido
-                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y)
+                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y) {
+                    setStartTime(Date.now()); // Para calcular la diferencia de tiempo
                     setGameStatus(1); // Iniciamos el juego
+                }
             }
         }
     };
 
     useEffect(() => {
         if (gameStatus === 1) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
-            const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
+            const interval = setInterval(() => setTimer(timer => timer + 1), tickTime);
             return () => clearInterval(interval);
         }
     }, [gameStatus]);
@@ -103,20 +115,27 @@ const GamePage = () => {
             const head = { x: newSnake[0].x + actualDir[0], y: newSnake[0].y + actualDir[1] };
             newSnake.unshift(head); // Desplazamos la cabeza
 
-            if (!foodCollision(newSnake)) {
+            const foodEaten = foodCollision(newSnake);
+            if (!foodEaten) {
                 newSnake.pop(); // Si no comemos manzana, quitamos la cola
 
                 const isCollision = checkCollision(newSnake);
-                if (isCollision && !inmortalMode) // Perdemos si hay colisión
+                if (isCollision && !inmortalMode) { // Perdemos si hay colisión
+                    setFinishTime(Date.now());
                     setGameStatus(2);
+                }
 
                 if (!isCollision || !inmortalMode)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
-                setFood({});
+                const newFoodList = foodList.filter((food) => food !== foodEaten);
+                setFoodList(newFoodList);
 
-                if (checkWin(newSnake)) setGameStatus(3); // Ganamos si esta el tablero lleno
-                else generateFood(newSnake); // Si no generamos otra manzana
+                if (!checkWin(newSnake)) generateFood(newSnake, newFoodList);// Si no ganamos generamos otra manzana
+                else { // Ganamos si esta el tablero lleno
+                    setFinishTime(Date.now());
+                    setGameStatus(3);
+                }
 
                 setScore(prevScore => prevScore + 1);
                 setSnake(newSnake);
@@ -124,18 +143,32 @@ const GamePage = () => {
         }
     }, [timer]);
 
+    useEffect(() => {
+        generateFood(snake, [FOOD_START]);
+    }, []);
+
     const playAgain = () => {
         setTimer(0);
+        setStartTime(undefined);
+        setFinishTime(undefined);
 
         setSnake(SNAKE_START);
-        setFood(FOOD_START);
+        setFoodList([FOOD_START]);
         setScore(0);
         setNextDir([]);
         setDir(DIR_START);
         setGameStatus(0);
+
+        generateFood(SNAKE_START, [FOOD_START]);
     }
 
-    const time = (timer / (1000 / SPEED)).toFixed(2);
+    const [firstRender, setFirstRender] = useState(false);
+    useEffect(() => { // Si cambia la pantalla de tamaño, empezamos de nuevo
+        if (!firstRender) setFirstRender(true);
+        else playAgain();
+    }, [CELL_SIZE])
+
+    const time = ((finishTime ?? Date.now()) - (startTime ?? Date.now())) / 1000;
     const seconds = Math.floor(time) % 60;
     const minutes = Math.floor((time / 60) % 60);
     const timeString = (minutes > 0 ? minutes + "m " : "") + seconds + "s";
@@ -157,7 +190,7 @@ const GamePage = () => {
                                     height: CELL_SIZE,
                                     marginRight: CELL_SIZE / 4,
                                     imageRendering: 'pixelated'
-                                }} src={foodImages[foodIndex].src}></img>
+                                }} src={foodIndex === "random" ? randomFoodSrc : foodImages[foodIndex].src}></img>
                                 <span className='text-white fw-bold'
                                     style={{ fontSize: CELL_SIZE / 1.5 }}>{score}</span>
                             </div>
@@ -181,14 +214,14 @@ const GamePage = () => {
                         </div>
                     </div>
 
-                    <GameArea snake={snake} food={food} gameStatus={gameStatus} />
+                    <GameArea snake={snake} foodList={foodList} gameStatus={gameStatus} />
                 </div>
 
 
                 <ControlPad onKeyDown={handleDir} />
             </div>
 
-            <SnakeAI snake={snake} food={food} AIMode={AIMode} moveSnake={handleDir} />
+            <SnakeAI snake={snake} AIMode={AIMode} moveSnake={handleDir} />
         </>
     );
 };
