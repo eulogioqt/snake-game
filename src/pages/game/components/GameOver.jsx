@@ -17,7 +17,7 @@ const GameOver = ({ gameStatus, playAgain, score, time }) => {
                     ¡Has perdido!</span>
                 <span className="text-white"
                     style={{ fontSize: isLarge ? "2.5rem" : "1.25rem" }}>
-                    Has conseguido {score} punto{score === 1 ? "" : "s"} en un tiempo de {time} segundos.</span>
+                    Has conseguido {score} punto{score === 1 ? "" : "s"} en un tiempo de {time}.</span>
                 <div className={`col mt-3 ${isLarge ? "" : "d-flex flex-column"}`}>
                     <button className={`btn btn-primary m${isLarge ? "e" : "b"}-2`}
                         style={{ fontSize: isLarge ? "1.5rem" : "1rem" }}
