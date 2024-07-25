@@ -136,10 +136,14 @@ const GamePage = () => {
     }
 
     const time = (timer / (1000 / SPEED)).toFixed(2);
+    const seconds = Math.floor(time) % 60;
+    const minutes = Math.floor((time / 60) % 60);
+    const timeString = (minutes > 0 ? minutes + "m " : "") + seconds + "s";
+
     return (
         <>
-            <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
-            <GameWin gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
+            <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} time={timeString} />
+            <GameWin gameStatus={gameStatus} playAgain={playAgain} score={score} time={timeString} />
 
             <div className='d-flex flex-column justify-content-center align-items-center position-fixed w-100 h-100'
                 style={{ backgroundColor: "black" }}>
@@ -165,7 +169,7 @@ const GamePage = () => {
                                     imageRendering: 'pixelated'
                                 }} src={timeImageSrc}></img>
                                 <span className='text-white fw-bold'
-                                    style={{ fontSize: CELL_SIZE / 1.5 }}>{time}</span>
+                                    style={{ fontSize: CELL_SIZE / 1.5 }}>{timeString}</span>
                             </div>
                         </div>
                         <div style={{ marginRight: CELL_SIZE }}>

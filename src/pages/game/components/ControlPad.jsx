@@ -30,7 +30,7 @@ const ControlPad = ({ onKeyDown }) => {
                     style={buttonStyle}
                     onMouseDown={() => handleKeyDown(38)}
                 >
-                    &#8593;
+                    ▲
                 </button>
             </div>
             <div className='mt-2'>
@@ -39,21 +39,21 @@ const ControlPad = ({ onKeyDown }) => {
                     style={buttonStyle}
                     onMouseDown={() => handleKeyDown(37)}
                 >
-                    &#8592;
+                    ◄
                 </button>
                 <button
                     className="btn mx-2"
                     style={buttonStyle}
                     onMouseDown={() => handleKeyDown(40)}
                 >
-                    &#8595;
+                    ▼
                 </button>
                 <button
                     className="btn"
                     style={buttonStyle}
                     onMouseDown={() => handleKeyDown(39)}
                 >
-                    &#8594;
+                    ►
                 </button>
             </div>
         </div>
