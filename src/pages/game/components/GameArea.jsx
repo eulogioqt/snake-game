@@ -105,7 +105,7 @@ const GameArea = ({ snake, food, gameStatus }) => {
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
         drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, food]);
+    }, [snake, food, CELL_SIZE]);
 
     const arrowsTutorial = (
         gameStatus === 0 &&
