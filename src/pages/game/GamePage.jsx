@@ -8,16 +8,19 @@ import SnakeAI from './components/SnakeAI.jsx';
 
 import timeImageSrc from '/src/assets/time.png';
 
-import { useApp, useIsLarge } from '../app/AppContext.jsx';
+import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 import { useImages } from '../../images/ImagesContext.jsx';
 
 const GamePage = () => {
-    const { SPEED, WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
+    const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { inmortalMode, AIMode, foodIndex } = useSettings();
     const { foodImages } = useImages();
+    const { tickTime } = useSettings();
 
     const [timer, setTimer] = useState(0);
+    const [startTime, setStartTime] = useState(undefined);
+    const [finishTime, setFinishTime] = useState(undefined);
 
     const [snake, setSnake] = useState(SNAKE_START);
     const [food, setFood] = useState(FOOD_START);
@@ -59,15 +62,17 @@ const GamePage = () => {
 
             if (gameStatus === 0) { // Si el juego no esta iniciado
                 const [dx, dy] = newDir; // Si es un primer movimiento valido
-                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y)
+                if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y) {
+                    setStartTime(Date.now()); // Para calcular la diferencia de tiempo
                     setGameStatus(1); // Iniciamos el juego
+                }
             }
         }
     };
 
     useEffect(() => {
         if (gameStatus === 1) { // Siempre se cuenta un frame mas ya que se tiene que comprobar la colision despues de moverse no antes
-            const interval = setInterval(() => setTimer(timer => timer + 1), SPEED);
+            const interval = setInterval(() => setTimer(timer => timer + 1), tickTime);
             return () => clearInterval(interval);
         }
     }, [gameStatus]);
@@ -107,16 +112,21 @@ const GamePage = () => {
                 newSnake.pop(); // Si no comemos manzana, quitamos la cola
 
                 const isCollision = checkCollision(newSnake);
-                if (isCollision && !inmortalMode) // Perdemos si hay colisión
+                if (isCollision && !inmortalMode) { // Perdemos si hay colisión
+                    setFinishTime(Date.now());
                     setGameStatus(2);
+                }
 
                 if (!isCollision || !inmortalMode)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
                 setFood({});
 
-                if (checkWin(newSnake)) setGameStatus(3); // Ganamos si esta el tablero lleno
-                else generateFood(newSnake); // Si no generamos otra manzana
+                if (!checkWin(newSnake)) generateFood(newSnake);// Si no ganamos generamos otra manzana
+                else {// Ganamos si esta el tablero lleno
+                    setFinishTime(Date.now());
+                    setGameStatus(3);
+                }
 
                 setScore(prevScore => prevScore + 1);
                 setSnake(newSnake);
@@ -126,6 +136,8 @@ const GamePage = () => {
 
     const playAgain = () => {
         setTimer(0);
+        setStartTime(undefined);
+        setFinishTime(undefined);
 
         setSnake(SNAKE_START);
         setFood(FOOD_START);
@@ -135,7 +147,11 @@ const GamePage = () => {
         setGameStatus(0);
     }
 
-    const time = (timer / (1000 / SPEED)).toFixed(2);
+    useEffect(() => { // Si cambia la pantalla de tamaño, empezamos de nuevo
+        playAgain();
+    }, [CELL_SIZE])
+
+    const time = ((finishTime ?? Date.now()) - (startTime ?? Date.now())) / 1000;
     const seconds = Math.floor(time) % 60;
     const minutes = Math.floor((time / 60) % 60);
     const timeString = (minutes > 0 ? minutes + "m " : "") + seconds + "s";
