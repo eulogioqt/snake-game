@@ -12,11 +12,9 @@ import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 import { useImages } from '../../images/ImagesContext.jsx';
 
-const foodAmount = 100;
-
 const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
-    const { inmortalMode, AIMode, foodIndex } = useSettings();
+    const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
     const { tickTime } = useSettings();
 
@@ -160,7 +158,7 @@ const GamePage = () => {
         setDir(DIR_START);
         setGameStatus(0);
 
-        generateFood(snake, [FOOD_START]);
+        generateFood(SNAKE_START, [FOOD_START]);
     }
 
     const [firstRender, setFirstRender] = useState(false);

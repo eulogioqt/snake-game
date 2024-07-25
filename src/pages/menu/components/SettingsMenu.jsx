@@ -1,16 +1,63 @@
 import React, { useState } from 'react';
-import { GearFill, Palette, Gear, HeartFill } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
+import { GearFill, Palette, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
 import { useSettings } from '../context/SettingsContext';
 import SelectFoodMenu from './SelectFoodMenu';
 import { useImages } from '../../../images/ImagesContext';
+import { useApp } from '../../app/AppContext';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
-    const { foodIndex, rack, setRack, snakeColor, setSnakeColor,
-        inmortalMode, setInmortalMode, AIMode, setAIMode } = useSettings();
+    const { foodIndex,
+        rack, setRack,
+        foodAmount, setFoodAmount,
+        tickTime, setTickTime,
+        snakeColor, setSnakeColor,
+        inmortalMode, setInmortalMode,
+        AIMode, setAIMode } = useSettings();
+    const { WIDTH_CELLS, HEIGHT_CELLS } = useApp();
     const { foodImages } = useImages();
 
     const [selectFoodOpen, setSelectFoodOpen] = useState(false);
     const swapSelectFood = () => setSelectFoodOpen(value => !value);
+
+
+    const handleFoodAmountInputChange = (e) => {
+        const value = e.target.value;
+
+        if (value.length <= 3)
+            setFoodAmount(value);
+    };
+
+    const handleFoodAmountInputBlur = () => {
+        let actualValue = parseInt(foodAmount, 10);
+
+        if (isNaN(actualValue) || actualValue < 1) {
+            actualValue = 1;
+        } else if (actualValue > WIDTH_CELLS * HEIGHT_CELLS) {
+            actualValue = WIDTH_CELLS * HEIGHT_CELLS;
+        }
+
+        setFoodAmount(actualValue);
+    };
+
+
+    const handleTickTimeInputChange = (e) => {
+        const value = e.target.value;
+
+        if (value.length <= 4)
+            setTickTime(value);
+    };
+
+    const handleTickTimeInputBlur = () => {
+        let actualValue = parseInt(tickTime, 10);
+
+        if (isNaN(actualValue) || actualValue < 1) {
+            actualValue = 1;
+        } else if (actualValue > 1000) {
+            actualValue = 1000;
+        }
+
+        setTickTime(actualValue);
+    };
 
     const settingsMenuRender = (
         <>
@@ -49,6 +96,50 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                                 value={snakeColor}
                                 onChange={(event) => setSnakeColor(event.target.value)}
                             />
+                        </div>
+                    </div>
+
+                    {/* Opción para establecer la cantidad de comida */}
+                    <div className="mb-4">
+                        <div className='d-flex align-items-center justify-content-between'>
+                            <div className='d-flex align-items-center'>
+                                <Apple size={30} className="me-3 flex-shrink-0" />
+                                <h5 className='mb-0 me-3'>Cantidad de comida</h5>
+                            </div>
+                            <div className="form-check form-switch">
+                                <input
+                                    className="form-control"
+                                    type="number"
+                                    value={foodAmount}
+                                    onChange={handleFoodAmountInputChange}
+                                    onBlur={handleFoodAmountInputBlur}
+                                    min="1"
+                                    max={WIDTH_CELLS * HEIGHT_CELLS}
+                                    style={{ width: "80px" }}
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Opción para establecer el tiempo por tick */}
+                    <div className="mb-4">
+                        <div className='d-flex align-items-center justify-content-between'>
+                            <div className='d-flex align-items-center'>
+                                <Clock size={30} className="me-3 flex-shrink-0" />
+                                <h5 className='mb-0 me-3'>Tiempo de tick (ms)</h5>
+                            </div>
+                            <div className="form-check form-switch">
+                                <input
+                                    className="form-control"
+                                    type="number"
+                                    value={tickTime}
+                                    onChange={handleTickTimeInputChange}
+                                    onBlur={handleTickTimeInputBlur}
+                                    min="1"
+                                    max="1000"
+                                    style={{ width: "80px" }}
+                                />
+                            </div>
                         </div>
                     </div>
 

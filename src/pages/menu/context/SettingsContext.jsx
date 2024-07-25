@@ -5,6 +5,7 @@ const SettingsContext = createContext();
 export const SettingsProvider = ({ children }) => {
     const [foodIndex, setFoodIndex] = useState("apple");
     const [snakeColor, setSnakeColor] = useState("#00ff00");
+    const [foodAmount, setFoodAmount] = useState(1);
     const [tickTime, setTickTime] = useState(150);
     const [rack, setRack] = useState(false);
     const [AIMode, setAIMode] = useState(false);
@@ -17,6 +18,8 @@ export const SettingsProvider = ({ children }) => {
                 setFoodIndex,
                 snakeColor,
                 setSnakeColor,
+                foodAmount,
+                setFoodAmount,
                 tickTime,
                 setTickTime,
                 rack,
