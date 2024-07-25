@@ -12,6 +12,8 @@ import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 import { useImages } from '../../images/ImagesContext.jsx';
 
+const foodAmount = 100;
+
 const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { inmortalMode, AIMode, foodIndex } = useSettings();
@@ -23,7 +25,7 @@ const GamePage = () => {
     const [finishTime, setFinishTime] = useState(undefined);
 
     const [snake, setSnake] = useState(SNAKE_START);
-    const [food, setFood] = useState(FOOD_START);
+    const [foodList, setFoodList] = useState([FOOD_START]);
     const [score, setScore] = useState(0);
 
     const [nextDir, setNextDir] = useState([]);
@@ -32,20 +34,26 @@ const GamePage = () => {
     const [gameStatus, setGameStatus] = useState(0); // 0 Not Started, 1 Started, 2 GameOver (3 Win)
 
     const getRandomInt = (max) => Math.floor(Math.random() * max);
-    const generateFood = (snake) => {
-        let newFood;
-        do {
-            newFood = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
-        } while (snake.some(segment => segment.x === newFood.x && segment.y === newFood.y));
+    const generateFood = (snake, foodList) => {
+        let newFoodList = [...foodList];
 
-        setFood(newFood);
+        while (newFoodList.length < foodAmount && ((WIDTH_CELLS * HEIGHT_CELLS) - snake.length) > newFoodList.length) {
+            const generatedFood = { x: getRandomInt(WIDTH_CELLS), y: getRandomInt(HEIGHT_CELLS) };
+            const isOnSnake = snake.some(segment => segment.x === generatedFood.x && segment.y === generatedFood.y);
+            const isOnFood = newFoodList.some(food => food.x === generatedFood.x && food.y === generatedFood.y);
+
+            if (!isOnSnake && !isOnFood)
+                newFoodList.push(generatedFood);
+        }
+
+        setFoodList(newFoodList);
     };
 
-    const foodCollision = (snake) => food !== undefined && snake[0].x === food.x && snake[0].y === food.y;
+    const foodCollision = (snake) => foodList.filter(food => snake[0].x === food.x && snake[0].y === food.y)[0];
     const bodyCollision = (snake) => snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y);
     const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = (snake) => bodyCollision(snake) || wallCollision(snake);
-    const checkWin = (snake) => snake.length === (WIDTH_CELLS) * (HEIGHT_CELLS);
+    const checkWin = (snake) => snake.length === (WIDTH_CELLS * HEIGHT_CELLS);
     const handleDir = (keyCode) => {
         const newDir = DIRECTIONS[keyCode];
 
@@ -108,7 +116,8 @@ const GamePage = () => {
             const head = { x: newSnake[0].x + actualDir[0], y: newSnake[0].y + actualDir[1] };
             newSnake.unshift(head); // Desplazamos la cabeza
 
-            if (!foodCollision(newSnake)) {
+            const foodEaten = foodCollision(newSnake);
+            if (!foodEaten) {
                 newSnake.pop(); // Si no comemos manzana, quitamos la cola
 
                 const isCollision = checkCollision(newSnake);
@@ -120,10 +129,11 @@ const GamePage = () => {
                 if (!isCollision || !inmortalMode)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
-                setFood({});
+                const newFoodList = foodList.filter((food) => food !== foodEaten);
+                setFoodList(newFoodList);
 
-                if (!checkWin(newSnake)) generateFood(newSnake);// Si no ganamos generamos otra manzana
-                else {// Ganamos si esta el tablero lleno
+                if (!checkWin(newSnake)) generateFood(newSnake, newFoodList);// Si no ganamos generamos otra manzana
+                else { // Ganamos si esta el tablero lleno
                     setFinishTime(Date.now());
                     setGameStatus(3);
                 }
@@ -134,21 +144,29 @@ const GamePage = () => {
         }
     }, [timer]);
 
+    useEffect(() => {
+        generateFood(snake, [FOOD_START]);
+    }, []);
+
     const playAgain = () => {
         setTimer(0);
         setStartTime(undefined);
         setFinishTime(undefined);
 
         setSnake(SNAKE_START);
-        setFood(FOOD_START);
+        setFoodList([FOOD_START]);
         setScore(0);
         setNextDir([]);
         setDir(DIR_START);
         setGameStatus(0);
+
+        generateFood(snake, [FOOD_START]);
     }
 
+    const [firstRender, setFirstRender] = useState(false);
     useEffect(() => { // Si cambia la pantalla de tamaño, empezamos de nuevo
-        playAgain();
+        if (!firstRender) setFirstRender(true);
+        else playAgain();
     }, [CELL_SIZE])
 
     const time = ((finishTime ?? Date.now()) - (startTime ?? Date.now())) / 1000;
@@ -197,14 +215,14 @@ const GamePage = () => {
                         </div>
                     </div>
 
-                    <GameArea snake={snake} food={food} gameStatus={gameStatus} />
+                    <GameArea snake={snake} foodList={foodList} gameStatus={gameStatus} />
                 </div>
 
 
                 <ControlPad onKeyDown={handleDir} />
             </div>
 
-            <SnakeAI snake={snake} food={food} AIMode={AIMode} moveSnake={handleDir} />
+            <SnakeAI snake={snake} AIMode={AIMode} moveSnake={handleDir} />
         </>
     );
 };

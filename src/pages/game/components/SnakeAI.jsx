@@ -1,19 +1,19 @@
 import { useEffect, useState } from 'react';
 import { useApp } from '../../app/AppContext';
 
-const SnakeAI = ({ snake, food, moveSnake, AIMode }) => {
+const SnakeAI = ({ snake, moveSnake, AIMode }) => {
     const [coverCorner, setCoverCorner] = useState(true);
     const { WIDTH_CELLS, HEIGHT_CELLS } = useApp();
 
     useEffect(() => {
         if (AIMode) {
-            const nextMove = calculateNextMove(snake, food);
+            const nextMove = calculateNextMove(snake);
             if (nextMove)
                 moveSnake(nextMove);
         }
     }, [snake, AIMode]);
 
-    const calculateNextMove = (snake, food) => { //38 UP, 40 DOWN, 37 LEFT, 39 RIGHT
+    const calculateNextMove = (snake) => { //38 UP, 40 DOWN, 37 LEFT, 39 RIGHT
         const head = snake[0];
 
         if (head.x === WIDTH_CELLS - 1) {
