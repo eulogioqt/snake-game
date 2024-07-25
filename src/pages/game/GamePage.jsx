@@ -143,7 +143,8 @@ const GamePage = () => {
             <GameOver gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
             <GameWin gameStatus={gameStatus} playAgain={playAgain} score={score} time={time} />
 
-            <div className='d-flex flex-column align-items-center position-fixed w-100 h-100'>
+            <div className='d-flex flex-column justify-content-center align-items-center position-fixed w-100 h-100'
+                style={{ backgroundColor: "black" }}>
                 <div className="d-flex flex-column">
                     <div className="d-flex justify-content-between align-items-center"
                         style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: 2 * CELL_SIZE, backgroundColor: "#4A752C" }}>
@@ -170,17 +171,18 @@ const GamePage = () => {
                             </div>
                         </div>
                         <div style={{ marginRight: CELL_SIZE }}>
-                            <button className={`btn btn-danger`} onClick={() => handlePageIndex(0)}>
-                                Salir
+                            <button className="d-flex justify-content-center align-items-center btn btn-danger m-0 p-0"
+                                style={{ width: CELL_SIZE * 2 * 1.25, height: CELL_SIZE * 1.25 }}
+                                onClick={() => handlePageIndex(0)}>
+                                <span style={{ fontSize: CELL_SIZE / 1.5 }}>Salir</span>
                             </button>
                         </div>
                     </div>
                     <GameArea snake={snake} food={food} />
                 </div>
 
-                <div className='mt-3'>
-                    <ControlPad onKeyDown={handleDir} />
-                </div>
+
+                <ControlPad onKeyDown={handleDir} />
             </div>
 
             <SnakeAI snake={snake} food={food} AIMode={AIMode} moveSnake={handleDir} />
