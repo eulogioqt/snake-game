@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 import { useSettings } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
+
+import randomFoodSrc from '/src/assets/randomFood.png';
 
 const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
     const { foodIndex, setFoodIndex } = useSettings();
@@ -35,6 +37,21 @@ const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
                             </div>
                         );
                     })}
+                    <div className='col-12 d-flex justify-content-center align-items-center my-3'>
+                        <img
+                            src={randomFoodSrc}
+                            style={{
+                                width: "48px",
+                                height: "48px",
+                                imageRendering: "pixelated",
+                                cursor: "pointer",
+                                transform: foodIndex === "random" ? "scale(2)" : "scale(1)",
+                                filter: foodIndex === "random" ? "drop-shadow(0 0 10px yellow)" : "none",
+                                transition: "transform 0.25s, filter 0.25s"
+                            }}
+                            onClick={() => setFoodIndex("random")}
+                        />
+                    </div>
                 </div>
 
 

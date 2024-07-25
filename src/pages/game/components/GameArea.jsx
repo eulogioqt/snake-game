@@ -9,7 +9,6 @@ import { useImages } from "../../../images/ImagesContext.jsx";
 const GameArea = ({ snake, foodList, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
     const { foodIndex, rack } = useSettings();
-
     const { snakeImages, foodImages } = useImages();
 
     const canvasRef = useRef(null);
@@ -67,8 +66,14 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
         }
 
         // Comida
+        const foodTypes = Object.keys(foodImages);
+
         foodList.forEach(food => {
-            ctx.drawImage(foodImages[foodIndex], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            let foodKey = foodIndex;
+            if (foodKey === "random")
+                foodKey = foodTypes[Math.floor(Math.random() * foodTypes.length)]
+
+            ctx.drawImage(foodImages[foodKey], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
 
         // Dibuja la cuadrícula si está activada

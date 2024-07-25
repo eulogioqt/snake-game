@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
+
 import { GearFill, Palette, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
+
 import { useSettings } from '../context/SettingsContext';
-import SelectFoodMenu from './SelectFoodMenu';
 import { useImages } from '../../../images/ImagesContext';
 import { useApp } from '../../app/AppContext';
+
+import randomFoodSrc from '/src/assets/randomFood.png';
+import SelectFoodMenu from './SelectFoodMenu';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
     const { foodIndex,
@@ -59,6 +63,8 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
         setTickTime(actualValue);
     };
 
+    const foodSrc = foodIndex === "random" ? randomFoodSrc : foodImages[foodIndex].src;
+
     const settingsMenuRender = (
         <>
             <SelectFoodMenu selectFoodOpen={selectFoodOpen} closeMenu={swapSelectFood} />
@@ -75,7 +81,7 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                                 <Gear size={30} className="me-3 flex-shrink-0" />
                                 <h5 className='mb-0 me-3'>Seleccionar comida</h5>
                             </div>
-                            {foodImages && <img src={foodImages[foodIndex].src}
+                            {foodImages && <img src={foodSrc}
                                 style={{ width: "40px", height: "40px", imageRendering: "pixelated", cursor: "pointer" }}
                                 onClick={swapSelectFood} />}
                         </div>

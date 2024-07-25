@@ -7,6 +7,7 @@ import GameWin from './components/GameWin.jsx';
 import SnakeAI from './components/SnakeAI.jsx';
 
 import timeImageSrc from '/src/assets/time.png';
+import randomFoodSrc from '/src/assets/randomFood.png';
 
 import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
@@ -189,7 +190,7 @@ const GamePage = () => {
                                     height: CELL_SIZE,
                                     marginRight: CELL_SIZE / 4,
                                     imageRendering: 'pixelated'
-                                }} src={foodImages[foodIndex].src}></img>
+                                }} src={foodIndex === "random" ? randomFoodSrc : foodImages[foodIndex].src}></img>
                                 <span className='text-white fw-bold'
                                     style={{ fontSize: CELL_SIZE / 1.5 }}>{score}</span>
                             </div>
