@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 
 const AppContext = createContext();
-const SPRITE_PIXELS = 8; // (16x16)
+const SPRITE_PIXELS = 1; // (16x16) Not in use rn
 
 export const AppProvider = ({ children }) => {
     const { width, height } = useWindowSize();
@@ -14,7 +14,7 @@ export const AppProvider = ({ children }) => {
     const WIDTH_CELLS = isLarge ? 17 : 13; // PC 15x17
     const HEIGHT_CELLS = isLarge ? 15 : 19; // MOBILE 13x19 // ON GOOGLE IS 11x21
     const CELL_SIZE = Math.min(
-        Math.floor(width * (isLarge ? 0.8 : 0.95) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
+        Math.floor(width * (isLarge ? 0.8 : 0.9) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
         Math.floor(height * (isLarge ? 0.8 : 0.6) / (HEIGHT_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS
     );
 
