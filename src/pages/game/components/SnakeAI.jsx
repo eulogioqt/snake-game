@@ -13,7 +13,7 @@ const SnakeAI = ({ snake, moveSnake, AIMode }) => {
         }
     }, [snake, AIMode]);
 
-    const calculateNextMove = (snake) => { //38 UP, 40 DOWN, 37 LEFT, 39 RIGHT
+    const calculateNextMove = (snake) => { // 38 UP, 40 DOWN, 37 LEFT, 39 RIGHT
         const head = snake[0];
 
         if (head.x === WIDTH_CELLS - 1) {
