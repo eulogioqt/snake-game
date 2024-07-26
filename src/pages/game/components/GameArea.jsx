@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import arrowsTutorialSrc from '/src/assets/arrowsTutorial.png';
 
@@ -11,7 +11,43 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
     const { foodIndex, rack } = useSettings();
     const { snakeImages, foodImages } = useImages();
 
+    const [foodListType, setFoodListType] = useState({});
     const canvasRef = useRef(null);
+
+    const cantorize = (x, y) => (x + y) * (x + y + 1) / 2 + x;
+    const decantorize = (n) => {
+        const k = Math.floor((-1 + Math.sqrt(1 + 8 * n)) / 2);
+
+        const x = n - (k * (k + 1)) / 2;
+        const y = k - x;
+
+        return { x, y };
+    };
+
+    useEffect(() => {
+        const newFoodListType = { ...foodListType };
+        const foodTypes = Object.keys(foodImages);
+
+        foodList.forEach(food => {
+            const id = cantorize(food.x, food.y);
+            if (!foodListType[id]) {
+                let foodKey = foodIndex;
+                if (foodKey === "random")
+                    foodKey = foodTypes[Math.floor(Math.random() * foodTypes.length)]
+
+                newFoodListType[id] = foodKey;
+            }
+        });
+
+        const foodListIds = new Set(foodList.map(food => cantorize(food.x, food.y).toString()));
+        Object.keys(newFoodListType).forEach(foodId => {
+            if (!foodListIds.has(foodId)) {
+                delete newFoodListType[foodId];
+            }
+        });
+
+        setFoodListType(newFoodListType);
+    }, [foodList]);
 
     const drawRotatedImage = (ctx, image, x, y, width, height, angle) => {
         ctx.save();
@@ -66,14 +102,11 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
         }
 
         // Comida
-        const foodTypes = Object.keys(foodImages);
+        Object.keys(foodListType).forEach(foodId => {
+            const { x, y } = decantorize(foodId);
+            const foodKey = foodListType[foodId];
 
-        foodList.forEach(food => {
-            let foodKey = foodIndex;
-            if (foodKey === "random")
-                foodKey = foodTypes[Math.floor(Math.random() * foodTypes.length)]
-
-            ctx.drawImage(foodImages[foodKey], food.x * CELL_SIZE, food.y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            ctx.drawImage(foodImages[foodKey], x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
         });
 
         // Dibuja la cuadrícula si está activada
@@ -112,7 +145,7 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
         drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, foodList, CELL_SIZE]);
+    }, [snake, foodListType, CELL_SIZE]);
 
     const arrowsTutorial = (
         gameStatus === 0 &&
