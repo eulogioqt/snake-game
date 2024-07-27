@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-
 import arrowsTutorialSrc from '/src/assets/arrowsTutorial.png';
 
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
 import { useImages } from "../../../images/ImagesContext.jsx";
+import { useCanvasUtils } from "../../../utils/CanvasUtils.jsx";
 
 const GameArea = ({ snake, foodList, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
@@ -13,14 +13,13 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
 
     const [foodListType, setFoodListType] = useState({});
     const canvasRef = useRef(null);
+    const canvasUtils = useCanvasUtils(canvasRef, CELL_SIZE);
 
     const cantorize = (x, y) => (x + y) * (x + y + 1) / 2 + x;
     const decantorize = (n) => {
         const k = Math.floor((-1 + Math.sqrt(1 + 8 * n)) / 2);
-
         const x = n - (k * (k + 1)) / 2;
         const y = k - x;
-
         return { x, y };
     };
 
@@ -32,9 +31,9 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
             const id = cantorize(food.x, food.y);
             if (!foodListType[id]) {
                 let foodKey = foodIndex;
-                if (foodKey === "random")
-                    foodKey = foodTypes[Math.floor(Math.random() * foodTypes.length)]
-
+                if (foodKey === "random") {
+                    foodKey = foodTypes[Math.floor(Math.random() * foodTypes.length)];
+                }
                 newFoodListType[id] = foodKey;
             }
         });
@@ -48,14 +47,6 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
 
         setFoodListType(newFoodListType);
     }, [foodList]);
-
-    const drawRotatedImage = (ctx, image, x, y, width, height, angle) => {
-        ctx.save();
-        ctx.translate(x + width / 2, y + height / 2);
-        ctx.rotate(angle);
-        ctx.drawImage(image, -width / 2, -height / 2, width, height);
-        ctx.restore();
-    };
 
     // 0 no es giro, 1 giro a la derecha, 2 giro a la izquierda
     const isTwist = (snake, index) => {
@@ -71,33 +62,30 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
         return crossProduct !== 0 ? (crossProduct < 0 ? 2 : 1) : 0;
     };
 
-    // Las imagenes se hacen mirando hacia la derecha
+    // Todo esto es respecto a la derecha, 0 grados es una linea a la derecha, 90 es una linea arriba
     const calcOrientation = (snake, index, prevIndex) => {
         const segment = snake[index];
         const prevSegment = snake[prevIndex];
 
         let r = 0;
         if (segment.x === prevSegment.x && segment.y > prevSegment.y) r = Math.PI / 2;
-        else if (segment.x === prevSegment.x && segment.y < prevSegment.y) r = -Math.PI / 2;
+        else if (segment.x === prevSegment.x && segment.y < prevSegment.y) r = 3 * Math.PI / 2;
         else if (segment.x < prevSegment.x && segment.y === prevSegment.y) r = Math.PI;
         else if (segment.x > prevSegment.x && segment.y === prevSegment.y) r = 0;
 
         return r;
     }
 
-    // Dibuja el canvas en cada actualización de snake o food
     useEffect(() => {
-        const ctx = canvasRef.current.getContext("2d");
-        ctx.clearRect(0, 0, WIDTH_CELLS * CELL_SIZE, HEIGHT_CELLS * CELL_SIZE);
+        if (!canvasUtils) return;
 
-        // Desactivar el suavizado de la imagen (hace que las imagenes 16x16 escalen bien)
-        ctx.imageSmoothingEnabled = false;
+        // Limpia el canvas
+        canvasUtils.clearRect(0, 0, WIDTH_CELLS, HEIGHT_CELLS);
 
         // Fondo
         for (let i = 0; i <= WIDTH_CELLS; i++) {
             for (let j = 0; j <= HEIGHT_CELLS; j++) {
-                ctx.fillStyle = ((i + j) % 2 == 0) ? '#AAD751' : '#A2D149';
-                ctx.fillRect(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+                canvasUtils.fillRect(((i + j) % 2 == 0) ? '#AAD751' : '#A2D149', i, j, 1, 1);
             }
         }
 
@@ -105,23 +93,18 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
         Object.keys(foodListType).forEach(foodId => {
             const { x, y } = decantorize(foodId);
             const foodKey = foodListType[foodId];
-
-            ctx.drawImage(foodImages[foodKey], x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+            canvasUtils.drawImage(foodImages[foodKey], x, y, 1, 1);
         });
 
         // Dibuja la cuadrícula si está activada
         if (rack) {
-            ctx.fillStyle = 'white';
-            for (let i = 0; i < WIDTH_CELLS; i++)
-                ctx.fillRect(i * CELL_SIZE, 0, 1, HEIGHT_CELLS * CELL_SIZE);
-
-            for (let i = 0; i < HEIGHT_CELLS; i++)
-                ctx.fillRect(0, i * CELL_SIZE, WIDTH_CELLS * CELL_SIZE, 1);
+            canvasUtils.fillRect('white', 0, 0, WIDTH_CELLS, 1); // líneas verticales
+            canvasUtils.fillRect('white', 0, 0, 1, HEIGHT_CELLS); // líneas horizontales
         }
 
         // Cabeza
         const headAngle = calcOrientation(snake, 0, 1);
-        drawRotatedImage(ctx, snakeImages.head, snake[0].x * CELL_SIZE, snake[0].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, headAngle);
+        canvasUtils.drawRotatedImage(snakeImages.head, snake[0].x, snake[0].y, 1, 1, headAngle);
 
         // Cuerpo
         snake.forEach((segment, index) => {
@@ -129,23 +112,20 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
                 const bodyAngle = calcOrientation(snake, index, index + 1);
                 const twist = isTwist(snake, index);
 
-                if (twist == 0) {
-                    drawRotatedImage(ctx, snakeImages.body, segment.x * CELL_SIZE,
-                        segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
-                } else if (twist == 1) {
-                    drawRotatedImage(ctx, snakeImages.bodyTwist, segment.x * CELL_SIZE,
-                        segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle);
-                } else if (twist == 2) {
-                    drawRotatedImage(ctx, snakeImages.bodyTwist, segment.x * CELL_SIZE,
-                        segment.y * CELL_SIZE, CELL_SIZE, CELL_SIZE, bodyAngle + Math.PI / 2);
+                if (twist === 0) {
+                    canvasUtils.drawRotatedImage(snakeImages.body, segment.x, segment.y, 1, 1, bodyAngle);
+                } else if (twist === 1) {
+                    canvasUtils.drawRotatedImage(snakeImages.bodyTwist, segment.x, segment.y, 1, 1, bodyAngle);
+                } else if (twist === 2) {
+                    canvasUtils.drawRotatedImage(snakeImages.bodyTwist, segment.x, segment.y, 1, 1, bodyAngle + Math.PI / 2);
                 }
             }
         });
 
         // Cola
         const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
-        drawRotatedImage(ctx, snakeImages.tail, snake[snake.length - 1].x * CELL_SIZE, snake[snake.length - 1].y * CELL_SIZE, CELL_SIZE, CELL_SIZE, tailAngle);
-    }, [snake, foodListType, CELL_SIZE]);
+        canvasUtils.drawRotatedImage(snakeImages.tail, snake[snake.length - 1].x, snake[snake.length - 1].y, 1, 1, tailAngle);
+    }, [snake, foodListType, canvasUtils]);
 
     const arrowsTutorial = (
         gameStatus === 0 &&
@@ -155,7 +135,7 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
             height: CELL_SIZE * 4,
             top: CELL_SIZE * 3,
             imageRendering: 'pixelated'
-        }}></img>
+        }} />
     );
 
     return (

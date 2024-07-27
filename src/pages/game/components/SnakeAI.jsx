@@ -1,17 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useApp } from '../../app/AppContext';
 
-const SnakeAI = ({ snake, moveSnake, AIMode }) => {
+export const useSnakeAI = (snake, moveSnake) => {
     const [coverCorner, setCoverCorner] = useState(true);
     const { WIDTH_CELLS, HEIGHT_CELLS } = useApp();
-
-    useEffect(() => {
-        if (AIMode) {
-            const nextMove = calculateNextMove(snake);
-            if (nextMove)
-                moveSnake(nextMove);
-        }
-    }, [snake, AIMode]);
 
     const calculateNextMove = (snake) => { // 38 UP, 40 DOWN, 37 LEFT, 39 RIGHT
         const head = snake[0];
@@ -56,7 +48,5 @@ const SnakeAI = ({ snake, moveSnake, AIMode }) => {
         return 39;
     };
 
-    return null;
+    return { calculateNextMove };
 };
-
-export default SnakeAI;

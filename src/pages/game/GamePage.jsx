@@ -4,7 +4,7 @@ import GameArea from './components/GameArea.jsx';
 import ControlPad from './components/ControlPad.jsx';
 import GameOver from './components/GameOver.jsx';
 import GameWin from './components/GameWin.jsx';
-import SnakeAI from './components/SnakeAI.jsx';
+import { useSnakeAI } from './components/SnakeAI.jsx';
 
 import timeImageSrc from '/src/assets/time.png';
 import randomFoodSrc from '/src/assets/randomFood.png';
@@ -19,6 +19,7 @@ const GamePage = () => {
     const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
     const { tickTime } = useSettings();
+    const snakeAI = useSnakeAI();
 
     const [timer, setTimer] = useState(0);
     const [startTime, setStartTime] = useState(undefined);
@@ -69,7 +70,7 @@ const GamePage = () => {
                 return updatedNextDir;
             });
 
-            if (gameStatus === 0) { // Si el juego no esta iniciado
+            if (gameStatus !== 1) { // Si el juego no esta iniciado
                 const [dx, dy] = newDir; // Si es un primer movimiento valido
                 if (snake[0].x + dx !== snake[1].x || snake[0].y + dy !== snake[1].y) {
                     setStartTime(Date.now()); // Guardamos tiempo inicio
@@ -95,7 +96,7 @@ const GamePage = () => {
     }, [gameStatus]);
 
     useEffect(() => { // THIS METHOD EXECUTES EACH TICK
-        if (gameStatus == 1) { // Si el juego está en marcha
+        if (gameStatus === 1) { // Si el juego está en marcha
             let actualDir;
 
             let i = 0;
@@ -142,14 +143,29 @@ const GamePage = () => {
                 setScore(prevScore => prevScore + 1);
                 setSnake(newSnake);
             }
+
+            if (AIMode) {
+                const nextMove = snakeAI.calculateNextMove(newSnake);
+                handleDir(nextMove);
+            }
         }
     }, [timer]);
+
+    const onStart = () => {
+        generateFood(SNAKE_START, [FOOD_START]);
+
+        if (AIMode) { // Calc first move
+            const nextMove = snakeAI.calculateNextMove(snake);
+            handleDir(nextMove);
+        }
+    }
 
     useEffect(() => {
         if (!firstRender) playAgain(); // Si cambia la pantalla de tamaño, empezamos de nuevo
         else { // En el primer render solo generamos la comida, no empezamos de nuevo
             setFirstRender(false);
-            generateFood(snake, [FOOD_START]);
+
+            onStart();
         }
     }, [CELL_SIZE]);
 
@@ -165,7 +181,7 @@ const GamePage = () => {
         setDir(DIR_START);
         setGameStatus(0);
 
-        generateFood(SNAKE_START, [FOOD_START]);
+        onStart();
     }
 
     const foodIconSrc = foodIndex === "random" ? randomFoodSrc : foodImages[foodIndex].src;
@@ -209,8 +225,6 @@ const GamePage = () => {
 
                 <ControlPad onKeyDown={handleDir} />
             </div>
-
-            <SnakeAI snake={snake} AIMode={AIMode} moveSnake={handleDir} />
         </>
     );
 };

@@ -5,7 +5,7 @@ import bodyImageSrc from '/src/assets/body.png';
 import bodyTwistImageSrc from '/src/assets/bodyTwist.png';
 import headImageSrc from '/src/assets/head.png';
 
-import { replaceImagePixels } from './ImageUtils';
+import { replaceImagePixels } from '../utils/ImageUtils';
 
 export const useSnakeImages = (snakeColor) => {
     const [snakeImages, setSnakeImages] = useState(undefined);
@@ -37,7 +37,6 @@ export const useSnakeImages = (snakeColor) => {
                 checkIfAllImagesLoaded();
             };
         });
-
     }, [snakeColor]);
 
     return snakeImages;

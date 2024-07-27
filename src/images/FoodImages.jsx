@@ -5,7 +5,7 @@ import blueberryImageSrc from '/src/assets/blueberry.png';
 import bananaImageSrc from '/src/assets/banana.png';
 import cherryImageSrc from '/src/assets/cherry.png';
 
-import { getAverageColor } from './ImageUtils';
+import { getAverageColor } from '../utils/ImageUtils';
 
 export const useFoodImages = () => {
     const [foodImages, setFoodImages] = useState(undefined);
