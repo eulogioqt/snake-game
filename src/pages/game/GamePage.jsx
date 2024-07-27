@@ -13,6 +13,7 @@ import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 import { useImages } from '../../images/ImagesContext.jsx';
 import InfoDisplayItem from './components/InfoDisplayItem.jsx';
+import ArrowsTutorial from './components/ArrowsTutorial.jsx';
 
 const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
@@ -82,7 +83,7 @@ const GamePage = () => {
 
     useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
-        if (!AIMode) // Si esta en modo automatico no queremos que intervenga el usuario
+        if (!AIMode && gameStatus <= 1) // Si no es modo auto y esta en juego o esperando, procesamos los movimientos
             document.addEventListener('keydown', handleKeyDown);
 
         let interval; // Timer para disparar el metodo logica cada tickTime
@@ -219,7 +220,15 @@ const GamePage = () => {
                         </div>
                     </div>
 
-                    <GameArea snake={snake} foodList={foodList} gameStatus={gameStatus} />
+                    <div className="position-relative d-flex justify-content-center align-items-center"
+                        style={{
+                            width: (WIDTH_CELLS + 2) * CELL_SIZE,
+                            height: (HEIGHT_CELLS + 2) * CELL_SIZE,
+                            backgroundColor: "#578A34"
+                        }}>
+                        <ArrowsTutorial condition={gameStatus === 0} />
+                        <GameArea snake={snake} foodList={foodList} />
+                    </div>
                 </div>
 
 

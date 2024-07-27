@@ -1,27 +1,20 @@
 import { useEffect, useRef, useState } from "react";
-import arrowsTutorialSrc from '/src/assets/arrowsTutorial.png';
 
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
 import { useImages } from "../../../images/ImagesContext.jsx";
 import { useCanvasUtils } from "../../../utils/CanvasUtils.jsx";
 
-const GameArea = ({ snake, foodList, gameStatus }) => {
+import { cantorize, decantorize, isTwist, calcOrientation } from "../../../utils/MathUtils.jsx";
+
+const GameArea = ({ snake, foodList }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
-    const { foodIndex, rack } = useSettings();
+    const { foodIndex } = useSettings();
     const { snakeImages, foodImages } = useImages();
 
     const [foodListType, setFoodListType] = useState({});
     const canvasRef = useRef(null);
     const canvasUtils = useCanvasUtils(canvasRef, CELL_SIZE);
-
-    const cantorize = (x, y) => (x + y) * (x + y + 1) / 2 + x;
-    const decantorize = (n) => {
-        const k = Math.floor((-1 + Math.sqrt(1 + 8 * n)) / 2);
-        const x = n - (k * (k + 1)) / 2;
-        const y = k - x;
-        return { x, y };
-    };
 
     useEffect(() => {
         const newFoodListType = { ...foodListType };
@@ -48,107 +41,88 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
         setFoodListType(newFoodListType);
     }, [foodList]);
 
-    // 0 no es giro, 1 giro a la derecha, 2 giro a la izquierda
-    const isTwist = (snake, index) => {
-        const nextSegment = snake[index - 1];
-        const currentSegment = snake[index];
-        const prevSegment = snake[index + 1];
-
-        const v1 = { x: currentSegment.x - prevSegment.x, y: currentSegment.y - prevSegment.y };
-        const v2 = { x: nextSegment.x - currentSegment.x, y: nextSegment.y - currentSegment.y };
-
-        const crossProduct = v1.x * v2.y - v1.y * v2.x;
-
-        return crossProduct !== 0 ? (crossProduct < 0 ? 2 : 1) : 0;
-    };
-
-    // Todo esto es respecto a la derecha, 0 grados es una linea a la derecha, 90 es una linea arriba
-    const calcOrientation = (snake, index, prevIndex) => {
-        const segment = snake[index];
-        const prevSegment = snake[prevIndex];
-
-        let r = 0;
-        if (segment.x === prevSegment.x && segment.y > prevSegment.y) r = Math.PI / 2;
-        else if (segment.x === prevSegment.x && segment.y < prevSegment.y) r = 3 * Math.PI / 2;
-        else if (segment.x < prevSegment.x && segment.y === prevSegment.y) r = Math.PI;
-        else if (segment.x > prevSegment.x && segment.y === prevSegment.y) r = 0;
-
-        return r;
-    }
-
     useEffect(() => {
-        if (!canvasUtils) return;
+        if (!canvasUtils)
+            return;
 
         // Limpia el canvas
-        canvasUtils.clearRect(0, 0, WIDTH_CELLS, HEIGHT_CELLS);
+        const clearCanvas = () => canvasUtils.clearRect(0, 0, WIDTH_CELLS, HEIGHT_CELLS);
+        clearCanvas();
 
         // Fondo
-        for (let i = 0; i <= WIDTH_CELLS; i++) {
-            for (let j = 0; j <= HEIGHT_CELLS; j++) {
-                canvasUtils.fillRect(((i + j) % 2 == 0) ? '#AAD751' : '#A2D149', i, j, 1, 1);
-            }
-        }
+        const drawBackground = () => {
+            const oddColor = '#AAD751';
+            const evenColor = '#A2D149';
 
-        // Comida
-        Object.keys(foodListType).forEach(foodId => {
-            const { x, y } = decantorize(foodId);
-            const foodKey = foodListType[foodId];
-            canvasUtils.drawImage(foodImages[foodKey], x, y, 1, 1);
-        });
+            for (let i = 0; i <= WIDTH_CELLS; i++) {
+                for (let j = 0; j <= HEIGHT_CELLS; j++) {
+                    const cellColor = ((i + j) % 2 == 0) ? oddColor : evenColor;
 
-        // Dibuja la cuadrícula si está activada
-        if (rack) {
-            canvasUtils.fillRect('white', 0, 0, WIDTH_CELLS, 1); // líneas verticales
-            canvasUtils.fillRect('white', 0, 0, 1, HEIGHT_CELLS); // líneas horizontales
-        }
-
-        // Cabeza
-        const headAngle = calcOrientation(snake, 0, 1);
-        canvasUtils.drawRotatedImage(snakeImages.head, snake[0].x, snake[0].y, 1, 1, headAngle);
-
-        // Cuerpo
-        snake.forEach((segment, index) => {
-            if (index > 0 && index < snake.length - 1) {
-                const bodyAngle = calcOrientation(snake, index, index + 1);
-                const twist = isTwist(snake, index);
-
-                if (twist === 0) {
-                    canvasUtils.drawRotatedImage(snakeImages.body, segment.x, segment.y, 1, 1, bodyAngle);
-                } else if (twist === 1) {
-                    canvasUtils.drawRotatedImage(snakeImages.bodyTwist, segment.x, segment.y, 1, 1, bodyAngle);
-                } else if (twist === 2) {
-                    canvasUtils.drawRotatedImage(snakeImages.bodyTwist, segment.x, segment.y, 1, 1, bodyAngle + Math.PI / 2);
+                    canvasUtils.fillRect(cellColor, i, j, 1, 1);
                 }
             }
-        });
+        }
+        drawBackground();
+
+        // Comida
+        const drawFood = () => {
+            Object.keys(foodListType).forEach(foodId => {
+                const { x, y } = decantorize(foodId);
+                const foodKey = foodListType[foodId];
+                const foodImage = foodImages[foodKey];
+
+                canvasUtils.drawImage(foodImage, x, y, 1, 1);
+            });
+        }
+        drawFood();
+
+        // Cabeza
+        const drawSnakeHead = () => {
+            const headAngle = calcOrientation(snake, 0, 1);
+            const snakeHead = snakeImages.head;
+            const headX = snake[0].x;
+            const headY = snake[0].y;
+
+            canvasUtils.drawRotatedImage(snakeHead, headX, headY, 1, 1, headAngle);
+        }
+        drawSnakeHead();
+
+        // Cuerpo
+        const drawSnakeBody = () => {
+            snake.forEach((segment, index) => {
+                if (index > 0 && index < snake.length - 1) {
+                    const bodyAngle = calcOrientation(snake, index, index + 1);
+                    const twist = isTwist(snake, index);
+
+                    const bodyImage = snakeImages.body;
+                    const bodyTwistImage = snakeImages.bodyTwist;
+                    const bodyX = segment.x;
+                    const bodyY = segment.y;
+
+                    if (twist === 0) {
+                        canvasUtils.drawRotatedImage(bodyImage, bodyX, bodyY, 1, 1, bodyAngle);
+                    } else {
+                        const addAngle = twist === 2 ? Math.PI / 2 : 0;
+                        canvasUtils.drawRotatedImage(bodyTwistImage, bodyX, bodyY, 1, 1, bodyAngle + addAngle);
+                    }
+                }
+            });
+        }
+        drawSnakeBody();
 
         // Cola
-        const tailAngle = calcOrientation(snake, snake.length - 1, snake.length - 2) - Math.PI;
-        canvasUtils.drawRotatedImage(snakeImages.tail, snake[snake.length - 1].x, snake[snake.length - 1].y, 1, 1, tailAngle);
+        const drawSnakeTail = () => {
+            const tailAngle = calcOrientation(snake, snake.length - 2, snake.length - 1);
+            const tailImage = snakeImages.tail;
+            const tailX = snake[snake.length - 1].x;
+            const tailY = snake[snake.length - 1].y;
+
+            canvasUtils.drawRotatedImage(tailImage, tailX, tailY, 1, 1, tailAngle);
+        }
+        drawSnakeTail();
     }, [snake, foodListType, canvasUtils]);
 
-    const arrowsTutorial = (
-        gameStatus === 0 &&
-        <img src={arrowsTutorialSrc} style={{
-            position: "absolute",
-            width: CELL_SIZE * 4,
-            height: CELL_SIZE * 4,
-            top: CELL_SIZE * 3,
-            imageRendering: 'pixelated'
-        }} />
-    );
-
-    return (
-        <div className="position-relative d-flex justify-content-center align-items-center"
-            style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: (HEIGHT_CELLS + 2) * CELL_SIZE, backgroundColor: "#578A34" }}>
-            {/*<button className="btn btn-primary position-absolute" style={{ top: 8, left: 8 }}>Arriba Izquierda</button>
-            <button className="btn btn-primary position-absolute" style={{ top: 8, right: 8 }}>Arriba Derecha</button>
-            <button className="btn btn-primary position-absolute" style={{ bottom: 8, left: 8 }}>Abajo Izquierda</button>
-            <button className="btn btn-primary position-absolute" style={{ bottom: 8, right: 8 }}>Abajo Derecha</button>*/}
-            {arrowsTutorial}
-            <canvas ref={canvasRef} width={WIDTH_CELLS * CELL_SIZE} height={HEIGHT_CELLS * CELL_SIZE}></canvas>
-        </div>
-    );
+    return <canvas ref={canvasRef} width={WIDTH_CELLS * CELL_SIZE} height={HEIGHT_CELLS * CELL_SIZE} />;
 }
 
 export default GameArea;

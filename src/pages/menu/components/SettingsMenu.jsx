@@ -11,7 +11,6 @@ import SelectFoodMenu from './SelectFoodMenu';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
     const { foodIndex,
-        rack, setRack,
         foodAmount, setFoodAmount,
         tickTime, setTickTime,
         snakeColor, setSnakeColor,
@@ -144,25 +143,6 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                                     min="1"
                                     max="1000"
                                     style={{ width: "80px" }}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Opción para activar/desactivar la cuadricula */}
-                    <div className="mb-4">
-                        <div className='d-flex align-items-center justify-content-between'>
-                            <div className='d-flex align-items-center'>
-                                <GearFill size={30} className="me-3 flex-shrink-0" />
-                                <h5 className='mb-0 me-3'>Mostrar cuadrícula</h5>
-                            </div>
-                            <div className="form-check form-switch">
-                                <input
-                                    className="form-check-input"
-                                    type="checkbox"
-                                    checked={rack}
-                                    onChange={() => setRack(showRack => !showRack)}
-                                    style={{ width: "40px", height: "25px" }}
                                 />
                             </div>
                         </div>

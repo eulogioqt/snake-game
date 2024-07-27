@@ -7,7 +7,6 @@ export const SettingsProvider = ({ children }) => {
     const [snakeColor, setSnakeColor] = useState("#00ff00");
     const [foodAmount, setFoodAmount] = useState(1);
     const [tickTime, setTickTime] = useState(150);
-    const [rack, setRack] = useState(false);
     const [AIMode, setAIMode] = useState(false);
     const [inmortalMode, setInmortalMode] = useState(false);
 
@@ -22,8 +21,6 @@ export const SettingsProvider = ({ children }) => {
                 setFoodAmount,
                 tickTime,
                 setTickTime,
-                rack,
-                setRack,
                 AIMode,
                 setAIMode,
                 inmortalMode,
