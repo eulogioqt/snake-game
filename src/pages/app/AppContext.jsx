@@ -1,21 +1,24 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useSettings } from "../menu/context/SettingsContext";
 
 const AppContext = createContext();
 const SPRITE_PIXELS = 1; // (16x16) Not in use rn
 
 export const AppProvider = ({ children }) => {
     const { width, height } = useWindowSize();
+    const { AIMode } = useSettings();
     const isLarge = useIsLarge();
 
     const [pageIndex, setPageIndex] = useState(0);
     const getPageIndex = () => pageIndex;
     const handlePageIndex = (pageIndex) => setPageIndex(pageIndex);
 
+    const DISPLAY_PAD = isLarge || AIMode;
     const WIDTH_CELLS = isLarge ? 17 : 13; // PC 15x17
     const HEIGHT_CELLS = isLarge ? 15 : 19; // MOBILE 13x19 // ON GOOGLE IS 11x21
     const CELL_SIZE = Math.min(
-        Math.floor(width * (isLarge ? 0.8 : 0.9) / (WIDTH_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS,
-        Math.floor(height * (isLarge ? 0.8 : 0.6) / (HEIGHT_CELLS * SPRITE_PIXELS)) * SPRITE_PIXELS
+        Math.floor(width / ((WIDTH_CELLS + 2) * SPRITE_PIXELS)) * SPRITE_PIXELS,
+        Math.floor(height / ((HEIGHT_CELLS + 4 + (DISPLAY_PAD ? 0 : 9)) * SPRITE_PIXELS)) * SPRITE_PIXELS
     );
 
     const DIR_START = [1, 0];
@@ -36,6 +39,7 @@ export const AppProvider = ({ children }) => {
     return (
         <AppContext.Provider
             value={{
+                DISPLAY_PAD,
                 WIDTH_CELLS,
                 HEIGHT_CELLS,
                 CELL_SIZE,

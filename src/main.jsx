@@ -7,11 +7,11 @@ import { SettingsProvider } from './pages/menu/context/SettingsContext.jsx';
 import { ImagesProvider } from './images/ImagesContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-    <AppProvider>
-        <SettingsProvider>
+    <SettingsProvider>
+        <AppProvider>
             <ImagesProvider>
                 <App />
             </ImagesProvider>
-        </SettingsProvider>
-    </AppProvider>
+        </AppProvider>
+    </SettingsProvider>
 );

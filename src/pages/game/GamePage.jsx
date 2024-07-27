@@ -180,7 +180,7 @@ const GamePage = () => {
         setScore(0);
         setNextDir([]);
         setDir(DIR_START);
-        setGameStatus(0);
+        if (!AIMode) setGameStatus(0);
 
         onStart();
     }
