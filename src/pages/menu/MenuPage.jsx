@@ -12,6 +12,17 @@ const MenuPage = () => {
     const goToGame = () => handlePageIndex(1);
     const swapSettingsOpen = () => setSettingsOpen(settings => !settings);
 
+    const ResponsiveButton = ({ icon: Icon, text, onClick, color }) => (
+        <button className={`btn ${color} mb-2 d-flex align-items-center justify-content-start`}
+            style={{ fontSize: "2rem", width: isLarge ? "400px" : "250px", padding: "10px" }}
+            onClick={onClick}>
+            <Icon style={{ width: "50px", height: "50px" }} />
+            <span className="flex-grow-1 text-center me-4">
+                {text}
+            </span>
+        </button>
+    );
+
     return (
         <>
             <SettingsMenu settingsOpen={settingsOpen} closeSettings={swapSettingsOpen} />
@@ -20,22 +31,19 @@ const MenuPage = () => {
                 <span className="mb-5 text-center" style={{ fontSize: isLarge ? "5rem" : "3rem" }}>
                     Snake Game
                 </span>
-                <button className="btn btn-primary mb-2 d-flex align-items-center justify-content-start"
-                    style={{ fontSize: "2rem", width: isLarge ? "400px" : "250px", padding: "10px" }}
-                    onClick={goToGame}>
-                    <Play style={{ width: "50px", height: "50px" }} />
-                    <span className="flex-grow-1 text-center me-4">
-                        Jugar
-                    </span>
-                </button>
-                <button className="btn btn-secondary d-flex align-items-center justify-content-start"
-                    style={{ fontSize: "2rem", width: isLarge ? "400px" : "250px", padding: "10px" }}
-                    onClick={swapSettingsOpen}          >
-                    <Gear style={{ margin: "7px" }} />
-                    <span className="flex-grow-1 text-center me-4">
-                        Ajustes
-                    </span>
-                </button>
+
+                <ResponsiveButton
+                    text="Jugar"
+                    onClick={goToGame}
+                    icon={Play}
+                    color="btn-primary"
+                />
+                <ResponsiveButton
+                    text="Ajustes"
+                    onClick={swapSettingsOpen}
+                    icon={Gear}
+                    color="btn-secondary"
+                />
             </div>
         </>
     );
