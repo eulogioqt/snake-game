@@ -14,8 +14,8 @@ export const AppProvider = ({ children }) => {
     const handlePageIndex = (pageIndex) => setPageIndex(pageIndex);
 
     const DISPLAY_PAD = isLarge || AIMode;
-    const WIDTH_CELLS = isLarge ? 17 : 13; // PC 15x17
-    const HEIGHT_CELLS = isLarge ? 15 : 19; // MOBILE 13x19 // ON GOOGLE IS 11x21
+    const WIDTH_CELLS = isLarge ? 17 : 13; // PC 15x17 // CANVAS_WIDTH_CELLS
+    const HEIGHT_CELLS = isLarge ? 15 : 19; // MOBILE 13x19 // ON GOOGLE IS 11x21 // CANVAS_HEIGHT_CELLS
     const CELL_SIZE = Math.min(
         Math.floor(width / ((WIDTH_CELLS + 2) * SPRITE_PIXELS)) * SPRITE_PIXELS,
         Math.floor(height / ((HEIGHT_CELLS + 4 + (DISPLAY_PAD ? 0 : 9)) * SPRITE_PIXELS)) * SPRITE_PIXELS
