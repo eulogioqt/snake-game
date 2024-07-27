@@ -4,6 +4,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
 
 import randomFoodSrc from '/src/assets/randomFood.png';
+import FoodDisplayItem from './FoodDisplayItem';
 
 const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
     const { foodIndex, setFoodIndex } = useSettings();
@@ -16,45 +17,26 @@ const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
                 <h2 className="text-center mb-4">Seleccionar comida</h2>
 
                 <div className="row">
-                    {foodImages && Object.keys(foodImages).map((key) => {
+                    {Object.keys(foodImages).map((key) => {
+                        const imageSrc = foodImages[key].src;
                         const isSelected = foodIndex === key;
+                        const glowColor = foodColor[key];
+                        const onClick = () => setFoodIndex(key);
 
                         return (
                             <div className="col-sm-3 col-6 mb-sm-4 my-4 d-flex justify-content-center align-items-center" key={key}>
-                                <img
-                                    src={foodImages[key].src}
-                                    style={{
-                                        width: "48px",
-                                        height: "48px",
-                                        imageRendering: "pixelated",
-                                        cursor: "pointer",
-                                        transform: isSelected ? "scale(2)" : "scale(1)",
-                                        filter: isSelected ? "drop-shadow(0 0 10px " + foodColor[key] + ")" : "none",
-                                        transition: "transform 0.25s, filter 0.25s"
-                                    }}
-                                    onClick={() => setFoodIndex(key)}
-                                />
+                                <FoodDisplayItem imageSrc={imageSrc} isSelected={isSelected} glowColor={glowColor} onClick={onClick} />
                             </div>
                         );
                     })}
                     <div className='col-12 d-flex justify-content-center align-items-center my-3'>
-                        <img
-                            src={randomFoodSrc}
-                            style={{
-                                width: "48px",
-                                height: "48px",
-                                imageRendering: "pixelated",
-                                cursor: "pointer",
-                                transform: foodIndex === "random" ? "scale(2)" : "scale(1)",
-                                filter: foodIndex === "random" ? "drop-shadow(0 0 10px yellow)" : "none",
-                                transition: "transform 0.25s, filter 0.25s"
-                            }}
-                            onClick={() => setFoodIndex("random")}
-                        />
+                        <FoodDisplayItem
+                            imageSrc={randomFoodSrc}
+                            isSelected={foodIndex === "random"}
+                            glowColor={"yellow"}
+                            onClick={() => setFoodIndex("random")} />
                     </div>
                 </div>
-
-
 
                 <div className="text-end mt-4">
                     <button className="btn btn-secondary" onClick={closeMenu}>

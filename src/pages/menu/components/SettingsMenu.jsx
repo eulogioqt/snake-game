@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { GearFill, Palette, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons'; // Utilizando iconos de Bootstrap
+import { Palette, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons';
 
 import { useSettings } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
@@ -21,7 +21,6 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
 
     const [selectFoodOpen, setSelectFoodOpen] = useState(false);
     const swapSelectFood = () => setSelectFoodOpen(value => !value);
-
 
     const handleFoodAmountInputChange = (e) => {
         const value = e.target.value;
