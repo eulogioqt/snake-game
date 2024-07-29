@@ -23,7 +23,7 @@ const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
-    const { tickTime } = useSettings();
+    const { tickTime, backgroundStyle } = useSettings();
     const snakeAI = useSnakeAI();
     const screenOrientation = useScreenOrientation();
 
@@ -211,7 +211,7 @@ const GamePage = () => {
             <div className='d-flex flex-column justify-content-center align-items-center position-fixed w-100 h-100 bg-black'>
                 <div className="d-flex flex-column">
                     <div className="d-flex justify-content-between align-items-center"
-                        style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: 2 * CELL_SIZE, backgroundColor: "#4A752C" }}>
+                        style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: 2 * CELL_SIZE, backgroundColor: backgroundStyle[3] }}>
                         <div className='d-flex' style={{ marginLeft: CELL_SIZE }}>
                             <div style={{ marginRight: CELL_SIZE }} >
                                 <InfoDisplayItem imageSrc={foodIconSrc} text={score} />
@@ -233,7 +233,7 @@ const GamePage = () => {
                         style={{
                             width: (WIDTH_CELLS + 2) * CELL_SIZE,
                             height: (HEIGHT_CELLS + 2) * CELL_SIZE,
-                            backgroundColor: "#578A34"
+                            backgroundColor: backgroundStyle[2]
                         }}>
                         <ArrowsTutorial condition={gameStatus === 0} />
                         <GameArea snake={snake} foodList={foodList} />

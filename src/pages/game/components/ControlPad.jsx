@@ -3,9 +3,11 @@ import React from 'react';
 import ControlPadButton from './ControlPadButton';
 
 import { useApp } from '../../app/AppContext';
+import { useSettings } from '../../menu/context/SettingsContext';
 
 const ControlPad = ({ onKeyDown }) => {
     const { DISPLAY_PAD, CELL_SIZE, WIDTH_CELLS } = useApp();
+    const { backgroundStyle } = useSettings();
 
     const handleKeyDown = (keyCode) => onKeyDown(keyCode);
 
@@ -15,7 +17,7 @@ const ControlPad = ({ onKeyDown }) => {
                 display: DISPLAY_PAD ? "none" : "flex",
                 width: (WIDTH_CELLS + 2) * CELL_SIZE,
                 height: (9) * CELL_SIZE,
-                backgroundColor: "#4A752C"
+                backgroundColor: backgroundStyle[3]
             }}>
             <div className='d-flex justify-content-center'>
                 <ControlPadButton text={"▲"} onClick={() => handleKeyDown(38)} />

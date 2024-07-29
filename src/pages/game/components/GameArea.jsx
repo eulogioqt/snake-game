@@ -7,7 +7,7 @@ import { useCanvasUtils } from "../../../utils/CanvasUtils.jsx";
 
 const GameArea = ({ snake, foodList }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
-    const { foodIndex } = useSettings();
+    const { foodIndex, backgroundStyle } = useSettings();
     const { snakeImages, foodImages } = useImages();
     const [foodListType, setFoodListType] = useState({});
     const canvasRef = useRef(null);
@@ -51,8 +51,8 @@ const GameArea = ({ snake, foodList }) => {
 
         // Fondo
         const drawBackground = () => {
-            const oddColor = '#AAD751';
-            const evenColor = '#A2D149';
+            const oddColor = backgroundStyle[0];
+            const evenColor = backgroundStyle[1];
 
             for (let i = 0; i < WIDTH_CELLS; i++) {
                 for (let j = 0; j < HEIGHT_CELLS; j++) {
