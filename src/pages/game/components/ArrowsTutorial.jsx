@@ -12,7 +12,8 @@ const ArrowsTutorial = ({ condition = true }) => {
         width: CELL_SIZE * 4,
         height: CELL_SIZE * 4,
         top: CELL_SIZE * 3,
-        imageRendering: 'pixelated'
+        imageRendering: 'pixelated',
+        zIndex: 10
     }} />;
 
     return condition && renderObj;
