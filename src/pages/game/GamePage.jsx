@@ -186,6 +186,7 @@ const GamePage = () => {
         setNextDir([]);
         setDir(DIR_START);
         if (!AIMode) setGameStatus(0);
+        else setStartTime(Date.now());
 
         onStart();
     }
