@@ -231,7 +231,6 @@ const GamePage = () => {
                     </div>
                 </div>
 
-
                 <ControlPad onKeyDown={handleDir} />
             </div>
         </>

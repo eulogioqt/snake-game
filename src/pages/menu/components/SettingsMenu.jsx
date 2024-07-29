@@ -25,7 +25,7 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
     const handleFoodAmountInputChange = (e) => {
         const value = e.target.value;
 
-        if (value.length <= 3)
+        if (value.length <= 4)
             setFoodAmount(value);
     };
 
