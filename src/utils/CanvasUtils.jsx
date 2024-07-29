@@ -10,8 +10,8 @@ export const useCanvasUtils = (canvasRef, scale = 1, smoothing = false) => {
 
         if (ctx) {  // The key of good resolution
             const deviceScale = Math.floor(0.99 + window.devicePixelRatio) || 1;
-            canvas.width = WIDTH_CELLS * CELL_SIZE * deviceScale;
-            canvas.height = HEIGHT_CELLS * CELL_SIZE * deviceScale;
+            canvas.width = WIDTH_CELLS * CELL_SIZE * deviceScale; // canvas.clientWidth
+            canvas.height = HEIGHT_CELLS * CELL_SIZE * deviceScale; // canvas.clientHeight
             ctx.scale(deviceScale, deviceScale);
             ctx.imageSmoothingEnabled = smoothing;
         }

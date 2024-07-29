@@ -4,16 +4,20 @@ import GameArea from './components/GameArea.jsx';
 import ControlPad from './components/ControlPad.jsx';
 import GameOver from './components/GameOver.jsx';
 import GameWin from './components/GameWin.jsx';
-import { useSnakeAI } from './components/SnakeAI.jsx';
+import InfoDisplayItem from './components/InfoDisplayItem.jsx';
+import ArrowsTutorial from './components/ArrowsTutorial.jsx';
 
 import timeImageSrc from '/src/assets/time.png';
 import randomFoodSrc from '/src/assets/randomFood.png';
+import ChangeOrientationScreen from '../game/components/ChangeOrientationScreen';
 
 import { useApp } from '../app/AppContext.jsx';
 import { useSettings } from '../menu/context/SettingsContext.jsx';
 import { useImages } from '../../images/ImagesContext.jsx';
-import InfoDisplayItem from './components/InfoDisplayItem.jsx';
-import ArrowsTutorial from './components/ArrowsTutorial.jsx';
+import { useSnakeAI } from './components/SnakeAI.jsx';
+import { useScreenOrientation } from '../../hooks/useScreenOrientation.jsx';
+
+import { isMobile } from 'react-device-detect';
 
 const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
@@ -21,6 +25,7 @@ const GamePage = () => {
     const { foodImages } = useImages();
     const { tickTime } = useSettings();
     const snakeAI = useSnakeAI();
+    const screenOrientation = useScreenOrientation();
 
     const [timer, setTimer] = useState(0);
     const [startTime, setStartTime] = useState(undefined);
@@ -193,6 +198,9 @@ const GamePage = () => {
 
         return (minutes > 0 ? minutes + "m " : "") + seconds + "s";
     }
+
+    if (isMobile && screenOrientation.includes("landscape"))
+        return <ChangeOrientationScreen />
 
     return (
         <>
