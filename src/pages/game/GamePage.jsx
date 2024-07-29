@@ -173,7 +173,7 @@ const GamePage = () => {
 
             onStart();
         }
-    }, [CELL_SIZE]);
+    }, [WIDTH_CELLS, HEIGHT_CELLS]);
 
     const playAgain = () => {
         setTimer(0);

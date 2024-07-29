@@ -15,7 +15,7 @@ export const useCanvasUtils = (canvasRef, scale = 1, smoothing = false) => {
             ctx.scale(deviceScale, deviceScale);
             ctx.imageSmoothingEnabled = smoothing;
         }
-    }, [CELL_SIZE]); // Si cambia, hay que re-escalar el canvas
+    }, [CELL_SIZE, WIDTH_CELLS, HEIGHT_CELLS]); // Si cambia, hay que re-escalar el canvas
 
     const clearRect = (x, y, w, h) => {
         const ctx = canvasRef.current.getContext("2d");
