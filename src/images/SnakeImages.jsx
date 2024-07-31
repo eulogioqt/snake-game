@@ -4,6 +4,8 @@ import tailImageSrc from '/src/assets/tail.png';
 import bodyImageSrc from '/src/assets/body.png';
 import bodyTwistImageSrc from '/src/assets/bodyTwist.png';
 import headImageSrc from '/src/assets/head.png';
+import headOpenMouthImageSrc from '/src/assets/headOpenMouth.png';
+import headDeadSrc from '/src/assets/headDead.png';
 
 import { replaceImagePixels } from '../utils/ImageUtils';
 
@@ -15,6 +17,8 @@ export const useSnakeImages = (snakeColor) => {
         body: bodyImageSrc,
         bodyTwist: bodyTwistImageSrc,
         head: headImageSrc,
+        headOpenMouth: headOpenMouthImageSrc,
+        headDead: headDeadSrc
     }
 
     useEffect(() => {

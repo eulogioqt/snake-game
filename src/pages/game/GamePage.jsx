@@ -70,9 +70,10 @@ const GamePage = () => {
                 const updatedNextDir = [...actualNextDir];
 
                 // Si la cola esta llena, reemplazamos el ultimo, si no añadimos al final
-                if (updatedNextDir.length >= 2) updatedNextDir[1] = newDir;
-                else updatedNextDir.push(newDir);
-
+                if (updatedNextDir.length < 2) { //updatedNextDir[1] = newDir;
+                    if (!updatedNextDir.some(dir => dir === newDir))
+                        updatedNextDir.push(newDir);
+                }
                 return updatedNextDir;
             });
 
@@ -134,7 +135,7 @@ const GamePage = () => {
                     setGameStatus(2);
                 }
 
-                if (!isCollision || !inmortalMode)
+                if (!isCollision)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
                 const newFoodList = foodList.filter((food) => food !== foodEaten);
@@ -236,7 +237,7 @@ const GamePage = () => {
                             backgroundColor: backgroundStyle[2]
                         }}>
                         <ArrowsTutorial condition={gameStatus === 0} />
-                        <GameArea snake={snake} foodList={foodList} />
+                        <GameArea snake={snake} foodList={foodList} gameStatus={gameStatus} />
                     </div>
                 </div>
 

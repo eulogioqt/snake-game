@@ -5,11 +5,13 @@ import { useImages } from "../../../images/ImagesContext.jsx";
 import { cantorize, decantorize, isTwist, calcOrientation } from "../../../utils/MathUtils.jsx";
 import { useCanvasUtils } from "../../../utils/CanvasUtils.jsx";
 
-const GameArea = ({ snake, foodList }) => {
+const GameArea = ({ snake, foodList, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
     const { foodIndex, backgroundStyle } = useSettings();
     const { snakeImages, foodImages } = useImages();
+
     const [foodListType, setFoodListType] = useState({});
+
     const canvasRef = useRef(null);
     const canvasUtils = useCanvasUtils(canvasRef, CELL_SIZE);
 
@@ -78,9 +80,17 @@ const GameArea = ({ snake, foodList }) => {
         // Cabeza
         const drawSnakeHead = () => {
             const headAngle = calcOrientation(snake, 0, 1);
-            const snakeHead = snakeImages.head;
             const headX = snake[0].x;
             const headY = snake[0].y;
+
+            let snakeHead;
+            if (gameStatus === 2) snakeHead = snakeImages.headDead; // Si muerto cabeza muerto
+            else { // Si no normal o boca abierta
+                const foodDistances = foodList.map(food => Math.sqrt(Math.pow((headX - food.x), 2) + Math.pow((headY - food.y), 2)));
+                const closeFood = foodDistances.some(distance => distance <= 2.5);
+
+                snakeHead = closeFood ? snakeImages.headOpenMouth : snakeImages.head;
+            }
 
             ctx.save();
             translate((headX + 0.5), (headY + 0.5));

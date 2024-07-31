@@ -43,7 +43,7 @@ export const replaceImagePixels = (imageObj, replaceColor) => {
     const [r, g, b] = hexToRgb(replaceColor);
 
     for (let i = 0; i < data.length; i += 4) {
-        if (data[i] > 127) {
+        if (data[i] < 127 && data[i + 1] > 127) { // GitHub compression makes this so difficult
             data[i] = r;       // Rojo
             data[i + 1] = g;   // Verde
             data[i + 2] = b;   // Azul
