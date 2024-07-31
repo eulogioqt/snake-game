@@ -23,7 +23,7 @@ const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
-    const { tickTime } = useSettings();
+    const { tickTime, backgroundStyle } = useSettings();
     const snakeAI = useSnakeAI();
     const screenOrientation = useScreenOrientation();
 
@@ -70,9 +70,10 @@ const GamePage = () => {
                 const updatedNextDir = [...actualNextDir];
 
                 // Si la cola esta llena, reemplazamos el ultimo, si no añadimos al final
-                if (updatedNextDir.length >= 2) updatedNextDir[1] = newDir;
-                else updatedNextDir.push(newDir);
-
+                if (updatedNextDir.length < 2) { //updatedNextDir[1] = newDir;
+                    if (!updatedNextDir.some(dir => dir === newDir))
+                        updatedNextDir.push(newDir);
+                }
                 return updatedNextDir;
             });
 
@@ -134,7 +135,7 @@ const GamePage = () => {
                     setGameStatus(2);
                 }
 
-                if (!isCollision || !inmortalMode)
+                if (!isCollision)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
                 const newFoodList = foodList.filter((food) => food !== foodEaten);
@@ -186,6 +187,7 @@ const GamePage = () => {
         setNextDir([]);
         setDir(DIR_START);
         if (!AIMode) setGameStatus(0);
+        else setStartTime(Date.now());
 
         onStart();
     }
@@ -210,7 +212,7 @@ const GamePage = () => {
             <div className='d-flex flex-column justify-content-center align-items-center position-fixed w-100 h-100 bg-black'>
                 <div className="d-flex flex-column">
                     <div className="d-flex justify-content-between align-items-center"
-                        style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: 2 * CELL_SIZE, backgroundColor: "#4A752C" }}>
+                        style={{ width: (WIDTH_CELLS + 2) * CELL_SIZE, height: 2 * CELL_SIZE, backgroundColor: backgroundStyle[3] }}>
                         <div className='d-flex' style={{ marginLeft: CELL_SIZE }}>
                             <div style={{ marginRight: CELL_SIZE }} >
                                 <InfoDisplayItem imageSrc={foodIconSrc} text={score} />
@@ -232,10 +234,10 @@ const GamePage = () => {
                         style={{
                             width: (WIDTH_CELLS + 2) * CELL_SIZE,
                             height: (HEIGHT_CELLS + 2) * CELL_SIZE,
-                            backgroundColor: "#578A34"
+                            backgroundColor: backgroundStyle[2]
                         }}>
                         <ArrowsTutorial condition={gameStatus === 0} />
-                        <GameArea snake={snake} foodList={foodList} />
+                        <GameArea snake={snake} foodList={foodList} gameStatus={gameStatus} />
                     </div>
                 </div>
 

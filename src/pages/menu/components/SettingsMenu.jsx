@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 
-import { Palette, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons';
+import { Palette, Palette2, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons';
 
-import { useSettings } from '../context/SettingsContext';
+import { useSettings, backgroundStyles } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
 import { useApp } from '../../app/AppContext';
 
@@ -10,12 +10,14 @@ import randomFoodSrc from '/src/assets/randomFood.png';
 import SelectFoodMenu from './SelectFoodMenu';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
-    const { foodIndex,
-        foodAmount, setFoodAmount,
+    const {
+        foodIndex, foodAmount, setFoodAmount,
+        backgroundStyle, setBackgroundStyle,
         tickTime, setTickTime,
         snakeColor, setSnakeColor,
         inmortalMode, setInmortalMode,
-        AIMode, setAIMode } = useSettings();
+        AIMode, setAIMode
+    } = useSettings();
     const { WIDTH_CELLS, HEIGHT_CELLS } = useApp();
     const { foodImages } = useImages();
 
@@ -40,7 +42,6 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
 
         setFoodAmount(actualValue);
     };
-
 
     const handleTickTimeInputChange = (e) => {
         const value = e.target.value;
@@ -72,7 +73,7 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                 <div className="card p-4" style={{ width: "80%", maxWidth: "600px" }}>
                     <h2 className="text-center mb-4">Configuración</h2>
 
-                    {/* Opción para activar/desactivar la cuadricula */}
+                    {/* Opción para seleccionar la comida */}
                     <div className="mb-4">
                         <div className='d-flex align-items-center justify-content-between'>
                             <div className='d-flex align-items-center'>
@@ -85,6 +86,38 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                         </div>
                     </div>
 
+                    {/* Opción para seleccionar el estilo del fondo */}
+                    <div className="mb-4">
+                        <div className='d-flex align-items-center justify-content-between'>
+                            <div className='d-flex align-items-center'>
+                                <Palette2 size={30} className="me-3 flex-shrink-0" />
+                                <h5 className='mb-0 me-3'>Estilo del fondo</h5>
+                            </div>
+                            <div className="btn-group" role="group">
+                                <button
+                                    type="button"
+                                    className={`btn btn-${backgroundStyle === backgroundStyles.green ? 'success' : 'outline-success'}`}
+                                    onClick={() => setBackgroundStyle(backgroundStyles.green)}
+                                >
+                                    Verde
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`btn btn-${backgroundStyle === backgroundStyles.blue ? 'primary' : 'outline-primary'}`}
+                                    onClick={() => setBackgroundStyle(backgroundStyles.blue)}
+                                >
+                                    Azul
+                                </button>
+                                <button
+                                    type="button"
+                                    className={`btn btn-${backgroundStyle === backgroundStyles.red ? 'danger' : 'outline-danger'}`}
+                                    onClick={() => setBackgroundStyle(backgroundStyles.red)}
+                                >
+                                    Rojo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
                     {/* Selección de color para la serpiente */}
                     <div className="mb-4">
