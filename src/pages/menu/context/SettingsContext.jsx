@@ -2,13 +2,15 @@ import React, { createContext, useContext, useState } from "react";
 
 const SettingsContext = createContext();
 
-const greenStyle = ['#AAD751', '#A2D149', '#578A34', '#4A752C', '#28530A', '#174209'];
-const blueStyle = ['#51AAD7', '#49A2D1', '#34578A', '#2C4A75', '#0A2853', '#091742'];
-const redStyle = ['#D751AA', '#D149A2', '#8A3457', '#752C4A', '#530A28', '#420917'];
+export const backgroundStyles = {
+    green: ['#AAD751', '#A2D149', '#578A34', '#4A752C', '#28530A', '#174209'],
+    blue: ['#51AAD7', '#49A2D1', '#34578A', '#2C4A75', '#0A2853', '#091742'],
+    red: ['#D751AA', '#D149A2', '#8A3457', '#752C4A', '#530A28', '#420917']
+}
 
 export const SettingsProvider = ({ children }) => {
     const [foodIndex, setFoodIndex] = useState("apple");
-    const [backgroundStyle, setBackgroundStyle] = useState(greenStyle);
+    const [backgroundStyle, setBackgroundStyle] = useState(backgroundStyles.green);
     const [snakeColor, setSnakeColor] = useState("#00ff00");
     const [foodAmount, setFoodAmount] = useState(1);
     const [tickTime, setTickTime] = useState(150);
