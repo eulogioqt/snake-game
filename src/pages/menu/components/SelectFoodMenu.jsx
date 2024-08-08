@@ -29,7 +29,7 @@ const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
                             </div>
                         );
                     })}
-                    <div className='col-12 d-flex justify-content-center align-items-center my-3'>
+                    <div className="col-sm-3 col-6 mb-sm-4 my-4 d-flex justify-content-center align-items-center">
                         <SelectDisplayItem
                             imageSrc={randomFoodSrc}
                             isSelected={foodIndex === "random"}
