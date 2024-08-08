@@ -4,6 +4,9 @@ import appleImageSrc from '/src/assets/apple.png';
 import blueberryImageSrc from '/src/assets/blueberry.png';
 import bananaImageSrc from '/src/assets/banana.png';
 import cherryImageSrc from '/src/assets/cherry.png';
+import bluecherryImageSrc from '/src/assets/bluecherry.png';
+import grapeImageSrc from '/src/assets/grape.png';
+import mangoImageSrc from '/src/assets/mango.png';
 
 import { getAverageColor } from '../utils/ImageUtils';
 
@@ -15,7 +18,10 @@ export const useFoodImages = () => {
         apple: appleImageSrc,
         blueberry: blueberryImageSrc,
         banana: bananaImageSrc,
-        cherry: cherryImageSrc
+        cherry: cherryImageSrc,
+        bluecherry: bluecherryImageSrc,
+        grape: grapeImageSrc,
+        mango: mangoImageSrc
     };
 
     useEffect(() => {

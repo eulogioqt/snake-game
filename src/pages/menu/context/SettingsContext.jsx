@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState } from "react";
 
+import redBackgroundSrc from '/src/assets/redBackground.png';
+import greenBackgroundSrc from '/src/assets/greenBackground.png';
+import blueBackgroundSrc from '/src/assets/blueBackground.png';
+
 const SettingsContext = createContext();
 
 export const backgroundStyles = {
@@ -8,9 +12,15 @@ export const backgroundStyles = {
     red: ['#D751AA', '#D149A2', '#8A3457', '#752C4A', '#530A28', '#420917']
 }
 
+export const backgronudThumbnails = {
+    green: greenBackgroundSrc,
+    blue: blueBackgroundSrc,
+    red: redBackgroundSrc
+}
+
 export const SettingsProvider = ({ children }) => {
     const [foodIndex, setFoodIndex] = useState("apple");
-    const [backgroundStyle, setBackgroundStyle] = useState(backgroundStyles.green);
+    const [backgroundStyleIndex, setBackgroundStyleIndex] = useState("green");
     const [snakeColor, setSnakeColor] = useState("#00ff00");
     const [foodAmount, setFoodAmount] = useState(1);
     const [tickTime, setTickTime] = useState(150);
@@ -22,8 +32,8 @@ export const SettingsProvider = ({ children }) => {
             value={{
                 foodIndex,
                 setFoodIndex,
-                backgroundStyle,
-                setBackgroundStyle,
+                backgroundStyleIndex,
+                setBackgroundStyleIndex,
                 snakeColor,
                 setSnakeColor,
                 foodAmount,

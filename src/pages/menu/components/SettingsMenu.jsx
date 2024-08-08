@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 
-import { Palette, Palette2, Gear, HeartFill, Apple, Clock } from 'react-bootstrap-icons';
+import { Palette, Palette2, Gear, HeartFill, Apple, Clock, Back } from 'react-bootstrap-icons';
 
-import { useSettings, backgroundStyles } from '../context/SettingsContext';
+import { useSettings, backgroundStyles, backgronudThumbnails } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
 import { useApp } from '../../app/AppContext';
 
 import randomFoodSrc from '/src/assets/randomFood.png';
+
 import SelectFoodMenu from './SelectFoodMenu';
+import SelectBackgroundMenu from './SelectBackgroundMenu';
 
 const SettingsMenu = ({ settingsOpen, closeSettings }) => {
     const {
-        foodIndex, foodAmount, setFoodAmount,
-        backgroundStyle, setBackgroundStyle,
+        foodIndex,
+        foodAmount, setFoodAmount,
+        backgroundStyleIndex,
         tickTime, setTickTime,
         snakeColor, setSnakeColor,
         inmortalMode, setInmortalMode,
@@ -23,6 +26,8 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
 
     const [selectFoodOpen, setSelectFoodOpen] = useState(false);
     const swapSelectFood = () => setSelectFoodOpen(value => !value);
+    const [selectBackgroundOpen, setSelectBackgroundOpen] = useState(false);
+    const swapSelectBackground = () => setSelectBackgroundOpen(value => !value);
 
     const handleFoodAmountInputChange = (e) => {
         const value = e.target.value;
@@ -67,6 +72,7 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
     const settingsMenuRender = (
         <>
             <SelectFoodMenu selectFoodOpen={selectFoodOpen} closeMenu={swapSelectFood} />
+            <SelectBackgroundMenu selectBackgroundOpen={selectBackgroundOpen} closeMenu={swapSelectBackground} />
 
             <div className='d-flex align-items-center justify-content-center position-fixed w-100 h-100'
                 style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", zIndex: 100 }}>
@@ -86,36 +92,16 @@ const SettingsMenu = ({ settingsOpen, closeSettings }) => {
                         </div>
                     </div>
 
-                    {/* Opción para seleccionar el estilo del fondo */}
+                    {/* Opción para seleccionar la comida */}
                     <div className="mb-4">
                         <div className='d-flex align-items-center justify-content-between'>
                             <div className='d-flex align-items-center'>
-                                <Palette2 size={30} className="me-3 flex-shrink-0" />
-                                <h5 className='mb-0 me-3'>Estilo del fondo</h5>
+                                <Back size={30} className="me-3 flex-shrink-0" />
+                                <h5 className='mb-0 me-3'>Seleccionar fondo</h5>
                             </div>
-                            <div className="btn-group" role="group">
-                                <button
-                                    type="button"
-                                    className={`btn btn-${backgroundStyle === backgroundStyles.green ? 'success' : 'outline-success'}`}
-                                    onClick={() => setBackgroundStyle(backgroundStyles.green)}
-                                >
-                                    Verde
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`btn btn-${backgroundStyle === backgroundStyles.blue ? 'primary' : 'outline-primary'}`}
-                                    onClick={() => setBackgroundStyle(backgroundStyles.blue)}
-                                >
-                                    Azul
-                                </button>
-                                <button
-                                    type="button"
-                                    className={`btn btn-${backgroundStyle === backgroundStyles.red ? 'danger' : 'outline-danger'}`}
-                                    onClick={() => setBackgroundStyle(backgroundStyles.red)}
-                                >
-                                    Rojo
-                                </button>
-                            </div>
+                            {<img src={backgronudThumbnails[backgroundStyleIndex]}
+                                style={{ width: "40px", height: "40px", imageRendering: "pixelated", cursor: "pointer" }}
+                                onClick={swapSelectBackground} />}
                         </div>
                     </div>
 

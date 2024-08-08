@@ -4,10 +4,11 @@ import { useSettings } from "../../menu/context/SettingsContext";
 import { useImages } from "../../../images/ImagesContext.jsx";
 import { cantorize, decantorize, isTwist, calcOrientation } from "../../../utils/MathUtils.jsx";
 import { useCanvasUtils } from "../../../utils/CanvasUtils.jsx";
+import { backgroundStyles } from "../../menu/context/SettingsContext";
 
 const GameArea = ({ snake, foodList, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();
-    const { foodIndex, backgroundStyle } = useSettings();
+    const { foodIndex, backgroundStyleIndex } = useSettings();
     const { snakeImages, foodImages } = useImages();
 
     const [foodListType, setFoodListType] = useState({});
@@ -53,6 +54,7 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
 
         // Fondo
         const drawBackground = () => {
+            const backgroundStyle = backgroundStyles[backgroundStyleIndex];
             const oddColor = backgroundStyle[0];
             const evenColor = backgroundStyle[1];
 

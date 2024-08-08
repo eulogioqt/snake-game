@@ -1,15 +1,15 @@
 import React from "react";
 
-const FoodDisplayItem = ({ imageSrc, isSelected, glowColor, onClick }) => {
+const SelectDisplayItem = ({ imageSrc, isSelected, glowColor, onClick, width = 48, height = 48, scale = 2 }) => {
     return (
         <img
             src={imageSrc}
             style={{
-                width: "48px",
-                height: "48px",
+                width: width,
+                height: height,
                 imageRendering: "pixelated",
                 cursor: "pointer",
-                transform: isSelected ? "scale(2)" : "scale(1)",
+                transform: isSelected ? "scale(" + scale + ")" : "scale(1)",
                 filter: isSelected ? "drop-shadow(0 0 10px " + glowColor + ")" : "none",
                 transition: "transform 0.25s, filter 0.25s"
             }}
@@ -18,4 +18,4 @@ const FoodDisplayItem = ({ imageSrc, isSelected, glowColor, onClick }) => {
     )
 }
 
-export default FoodDisplayItem;
+export default SelectDisplayItem;
