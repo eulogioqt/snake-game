@@ -4,7 +4,7 @@ import { useSettings } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
 
 import randomFoodSrc from '/src/assets/randomFood.png';
-import FoodDisplayItem from './FoodDisplayItem';
+import SelectDisplayItem from './SelectDisplayItem';
 
 const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
     const { foodIndex, setFoodIndex } = useSettings();
@@ -25,12 +25,12 @@ const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {
 
                         return (
                             <div className="col-sm-3 col-6 mb-sm-4 my-4 d-flex justify-content-center align-items-center" key={key}>
-                                <FoodDisplayItem imageSrc={imageSrc} isSelected={isSelected} glowColor={glowColor} onClick={onClick} />
+                                <SelectDisplayItem imageSrc={imageSrc} isSelected={isSelected} glowColor={glowColor} onClick={onClick} />
                             </div>
                         );
                     })}
                     <div className='col-12 d-flex justify-content-center align-items-center my-3'>
-                        <FoodDisplayItem
+                        <SelectDisplayItem
                             imageSrc={randomFoodSrc}
                             isSelected={foodIndex === "random"}
                             glowColor={"yellow"}

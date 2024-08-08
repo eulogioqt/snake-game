@@ -5,11 +5,15 @@ import rotateScreenSrc from '/src/assets/rotateScreenSymbol.png';
 import { useApp } from "../../app/AppContext";
 import { useSettings } from "../../menu/context/SettingsContext";
 
+import { backgroundStyles } from "../../menu/context/SettingsContext";
+
 import "../../../css/rotationAnimation.css";
 
 const ChangeOrientationScreen = () => {
     const { CELL_SIZE } = useApp();
-    const { backgroundStyle } = useSettings();
+    const { backgroundStyleIndex } = useSettings();
+
+    const backgroundStyle = backgroundStyles[backgroundStyleIndex];
 
     return (
         <div className='d-flex align-items-center justify-content-center position-fixed w-100 h-100'

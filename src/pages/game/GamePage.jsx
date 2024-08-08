@@ -18,12 +18,13 @@ import { useSnakeAI } from './components/SnakeAI.jsx';
 import { useScreenOrientation } from '../../hooks/useScreenOrientation.jsx';
 
 import { isMobile } from 'react-device-detect';
+import { backgroundStyles } from '../menu/context/SettingsContext.jsx';
 
 const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
-    const { tickTime, backgroundStyle } = useSettings();
+    const { tickTime, backgroundStyleIndex } = useSettings();
     const snakeAI = useSnakeAI();
     const screenOrientation = useScreenOrientation();
 
@@ -192,6 +193,7 @@ const GamePage = () => {
         onStart();
     }
 
+    const backgroundStyle = backgroundStyles[backgroundStyleIndex];
     const foodIconSrc = foodIndex === "random" ? randomFoodSrc : foodImages[foodIndex].src;
     const getTimeString = () => {
         const time = ((finishTime ?? Date.now()) - (startTime ?? Date.now())) / 1000;

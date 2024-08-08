@@ -1,10 +1,15 @@
 import React from 'react';
+
 import { useApp } from '../../app/AppContext';
 import { useSettings } from '../../menu/context/SettingsContext';
 
+import { backgroundStyles } from '../../menu/context/SettingsContext';
+
 const ControlPadButton = ({ text, onClick }) => {
     const { CELL_SIZE } = useApp();
-    const { backgroundStyle } = useSettings();
+    const { backgroundStyleIndex } = useSettings();
+
+    const backgroundStyle = backgroundStyles[backgroundStyleIndex];
 
     return (
         <button

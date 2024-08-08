@@ -5,10 +5,13 @@ import ControlPadButton from './ControlPadButton';
 import { useApp } from '../../app/AppContext';
 import { useSettings } from '../../menu/context/SettingsContext';
 
+import { backgroundStyles } from '../../menu/context/SettingsContext';
+
 const ControlPad = ({ onKeyDown }) => {
     const { DISPLAY_PAD, CELL_SIZE, WIDTH_CELLS } = useApp();
-    const { backgroundStyle } = useSettings();
+    const { backgroundStyleIndex } = useSettings();
 
+    const backgroundStyle = backgroundStyles[backgroundStyleIndex];
     const handleKeyDown = (keyCode) => onKeyDown(keyCode);
 
     return (
