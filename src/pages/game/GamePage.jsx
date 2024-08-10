@@ -19,12 +19,14 @@ import { useScreenOrientation } from '../../hooks/useScreenOrientation.jsx';
 
 import { isMobile } from 'react-device-detect';
 import { backgroundStyles } from '../menu/context/SettingsContext.jsx';
+import { useAudio } from '../../hooks/useAudio.jsx';
 
 const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
     const { tickTime, backgroundStyleIndex } = useSettings();
+    const { playAppleCrunch, playSnakeHit, playSnakeMove } = useAudio();
     const snakeAI = useSnakeAI();
     const screenOrientation = useScreenOrientation();
 
@@ -116,6 +118,9 @@ const GamePage = () => {
                 i++;
             }
 
+            if (actualDir && actualDir !== dir) // sonido
+                playSnakeMove();
+
             if (actualDir === undefined) actualDir = dir;
             else {
                 setDir(actualDir);
@@ -132,6 +137,8 @@ const GamePage = () => {
 
                 const isCollision = checkCollision(newSnake);
                 if (isCollision && !inmortalMode) { // Perdemos si hay colisión
+                    playSnakeHit(); // sonido
+
                     setFinishTime(Date.now());
                     setGameStatus(2);
                 }
@@ -139,8 +146,10 @@ const GamePage = () => {
                 if (!isCollision)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
+                playAppleCrunch();
+
                 const newFoodList = foodList.filter((food) => food !== foodEaten);
-                setFoodList(newFoodList);
+                setFoodList(newFoodList); // sonido
 
                 if (!checkWin(newSnake)) generateFood(newSnake, newFoodList);// Si no ganamos generamos otra manzana
                 else { // Ganamos si esta el tablero lleno
