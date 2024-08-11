@@ -36,18 +36,8 @@ const MenuPage = () => {
                     Snake Game
                 </span>
 
-                <ResponsiveButton
-                    text="Jugar"
-                    onClick={goToGame}
-                    icon={Play}
-                    color="btn-primary"
-                />
-                <ResponsiveButton
-                    text="Ajustes"
-                    onClick={swapSettingsOpen}
-                    icon={Gear}
-                    color="btn-secondary"
-                />
+                <ResponsiveButton text="Jugar" onClick={goToGame} icon={Play} color="btn-primary" />
+                <ResponsiveButton text="Ajustes" onClick={swapSettingsOpen} icon={Gear} color="btn-secondary" />
             </div>
         </>
     );
