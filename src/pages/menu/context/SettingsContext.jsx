@@ -26,6 +26,7 @@ export const SettingsProvider = ({ children }) => {
     const [tickTime, setTickTime] = useState(150);
     const [AIMode, setAIMode] = useState(false);
     const [inmortalMode, setInmortalMode] = useState(false);
+    const [sound, setSound] = useState(true);
 
     return (
         <SettingsContext.Provider
@@ -43,7 +44,9 @@ export const SettingsProvider = ({ children }) => {
                 AIMode,
                 setAIMode,
                 inmortalMode,
-                setInmortalMode
+                setInmortalMode,
+                sound,
+                setSound
             }}
         >
             {children}
