@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import GameArea from './components/GameArea.jsx';
 import ControlPad from './components/ControlPad.jsx';
@@ -67,7 +67,7 @@ const GamePage = () => {
     const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = (snake) => bodyCollision(snake) || wallCollision(snake);
     const checkWin = (snake) => snake.length === (WIDTH_CELLS * HEIGHT_CELLS);
-    const handleDir = (keyCode) => {
+    const handleDir = useCallback((keyCode) => {
         const newDir = DIRECTIONS[keyCode];
 
         if (newDir) {
@@ -90,7 +90,7 @@ const GamePage = () => {
                 }
             }
         }
-    };
+    }, [gameStatus]);
 
     useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
