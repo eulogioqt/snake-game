@@ -7,6 +7,8 @@ import GameWin from './components/GameWin.jsx';
 import InfoDisplayItem from './components/InfoDisplayItem.jsx';
 import ArrowsTutorial from './components/ArrowsTutorial.jsx';
 
+import soundOnSrc from '/src/assets/soundOn.png';
+import soundOffSrc from '/src/assets/soundOff.png';
 import timeImageSrc from '/src/assets/time.png';
 import randomFoodSrc from '/src/assets/randomFood.png';
 import ChangeOrientationScreen from '../game/components/ChangeOrientationScreen';
@@ -25,7 +27,7 @@ const GamePage = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE, DIR_START, SNAKE_START, DIRECTIONS, FOOD_START, handlePageIndex } = useApp();
     const { foodIndex, foodAmount, inmortalMode, AIMode } = useSettings();
     const { foodImages } = useImages();
-    const { tickTime, backgroundStyleIndex } = useSettings();
+    const { tickTime, backgroundStyleIndex, sound, setSound } = useSettings();
     const { playAppleCrunch, playSnakeHit, playSnakeMove } = useAudio();
     const snakeAI = useSnakeAI();
     const screenOrientation = useScreenOrientation();
@@ -118,8 +120,9 @@ const GamePage = () => {
                 i++;
             }
 
-            if (actualDir && actualDir !== dir) // sonido
-                playSnakeMove();
+            if (actualDir && actualDir !== dir) { // sonido
+                if (sound) playSnakeMove();
+            }
 
             if (actualDir === undefined) actualDir = dir;
             else {
@@ -137,7 +140,7 @@ const GamePage = () => {
 
                 const isCollision = checkCollision(newSnake);
                 if (isCollision && !inmortalMode) { // Perdemos si hay colisión
-                    playSnakeHit(); // sonido
+                    if (sound) playSnakeHit(); // sonido
 
                     setFinishTime(Date.now());
                     setGameStatus(2);
@@ -146,10 +149,10 @@ const GamePage = () => {
                 if (!isCollision)
                     setSnake(newSnake);
             } else { // Si comemos manzana, generamos otra y sumamos puntos y no quitamos la cola este tick
-                playAppleCrunch();
+                if (sound) playAppleCrunch(); // sonido
 
                 const newFoodList = foodList.filter((food) => food !== foodEaten);
-                setFoodList(newFoodList); // sonido
+                setFoodList(newFoodList)
 
                 if (!checkWin(newSnake)) generateFood(newSnake, newFoodList);// Si no ganamos generamos otra manzana
                 else { // Ganamos si esta el tablero lleno
@@ -212,6 +215,12 @@ const GamePage = () => {
         return (minutes > 0 ? minutes + "m " : "") + seconds + "s";
     }
 
+    const SoundButton = () => (
+        <div className='me-4' style={{ cursor: "pointer" }} onClick={() => setSound(sound => !sound)}>
+            <img src={sound ? soundOnSrc : soundOffSrc} style={{ width: CELL_SIZE, height: CELL_SIZE, imageRendering: 'pixelated' }} />
+        </div>
+    )
+
     if (isMobile && screenOrientation.includes("landscape"))
         return <ChangeOrientationScreen />
 
@@ -232,7 +241,8 @@ const GamePage = () => {
                                 <InfoDisplayItem imageSrc={timeImageSrc} text={getTimeString()} />
                             </div>
                         </div>
-                        <div style={{ marginRight: CELL_SIZE }}>
+                        <div className="d-flex align-items-center" style={{ marginRight: CELL_SIZE }}>
+                            <SoundButton />
                             <button className="btn btn-danger p-0"
                                 style={{ width: CELL_SIZE * 2 * 1.25, height: CELL_SIZE * 1.25 }}
                                 onClick={() => handlePageIndex(0)}>
