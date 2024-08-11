@@ -43,11 +43,7 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
 
     useEffect(() => {
         const { clearRect, drawImage, translate, drawRotatedImage, fillRect } = canvasUtils;
-
         if (!canvasRef.current) return;
-
-        const canvas = canvasRef.current;
-        const ctx = canvas.getContext("2d");
 
         // Limpia el canvas
         clearRect(0, 0, WIDTH_CELLS, HEIGHT_CELLS);
@@ -94,11 +90,7 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
                 snakeHead = closeFood ? snakeImages.headOpenMouth : snakeImages.head;
             }
 
-            ctx.save();
-            translate((headX + 0.5), (headY + 0.5));
-            ctx.rotate(headAngle);
-            drawImage(snakeHead, -0.5, -0.5, 1, 1);
-            ctx.restore();
+            drawRotatedImage(snakeHead, headX, headY, 1, 1, headAngle);
         };
         drawSnakeHead();
 
@@ -114,17 +106,10 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
                     const bodyX = segment.x;
                     const bodyY = segment.y;
 
-                    ctx.save();
-                    translate((bodyX + 0.5), (bodyY + 0.5));
-                    ctx.rotate(bodyAngle);
-                    if (twist === 0) {
-                        drawImage(bodyImage, -0.5, -0.5, 1, 1);
-                    } else {
-                        const addAngle = twist === 2 ? Math.PI / 2 : 0;
-                        ctx.rotate(addAngle);
-                        drawImage(bodyTwistImage, -0.5, -0.5, 1, 1);
-                    }
-                    ctx.restore();
+                    const finalBodyImage = twist === 0 ? bodyImage : bodyTwistImage;
+                    const finalBodyAngle = bodyAngle + (twist === 2 ? Math.PI / 2 : 0);
+
+                    drawRotatedImage(finalBodyImage, bodyX, bodyY, 1, 1, finalBodyAngle);
                 }
             });
         };
@@ -137,11 +122,7 @@ const GameArea = ({ snake, foodList, gameStatus }) => {
             const tailX = snake[snake.length - 1].x;
             const tailY = snake[snake.length - 1].y;
 
-            ctx.save();
-            translate((tailX + 0.5), (tailY + 0.5));
-            ctx.rotate(tailAngle);
-            drawImage(tailImage, -0.5, -0.5, 1, 1);
-            ctx.restore();
+            drawRotatedImage(tailImage, tailX, tailY, 1, 1, tailAngle);
         };
         drawSnakeTail();
     }, [snake, foodListType, canvasUtils]);
