@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useApp } from '../pages/app/AppContext';
+import { useApp } from '../contexts/AppContext';
 
 export const useCanvasUtils = (canvasRef, scale = 1, smoothing = false) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();

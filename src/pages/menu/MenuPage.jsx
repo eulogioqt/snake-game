@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Play, Gear } from 'react-bootstrap-icons';
-import { useApp, useIsLarge } from "../app/AppContext";
+import { useApp, useIsLarge } from "../../contexts/AppContext";
 import SettingsMenu from "./components/SettingsMenu";
 
 const MenuPage = () => {

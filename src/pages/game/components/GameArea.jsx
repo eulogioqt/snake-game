@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useApp } from "../../app/AppContext";
-import { useSettings } from "../../menu/context/SettingsContext";
-import { useImages } from "../../../images/ImagesContext.jsx";
+import { useApp } from "../../../contexts/AppContext.jsx";
+import { useSettings } from "../../../contexts/SettingsContext.jsx";
+import { useImages } from "../../../contexts/ImagesContext.jsx";
 import { cantorize, decantorize, isTwist, calcOrientation } from "../../../utils/MathUtils.jsx";
 import { useCanvasUtils } from "../../../utils/CanvasUtils.jsx";
-import { backgroundStyles } from "../../menu/context/SettingsContext";
+import { backgroundStyles } from "../../../contexts/SettingsContext.jsx";
 
 const GameArea = ({ snake, foodList, gameStatus }) => {
     const { WIDTH_CELLS, HEIGHT_CELLS, CELL_SIZE } = useApp();

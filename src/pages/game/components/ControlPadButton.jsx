@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { useApp } from '../../app/AppContext';
-import { useSettings } from '../../menu/context/SettingsContext';
+import { useApp } from '../../../contexts/AppContext';
+import { useSettings } from '../../../contexts/SettingsContext';
 
-import { backgroundStyles } from '../../menu/context/SettingsContext';
+import { backgroundStyles } from '../../../contexts/SettingsContext';
 
 const ControlPadButton = ({ text, onClick }) => {
     const { CELL_SIZE } = useApp();

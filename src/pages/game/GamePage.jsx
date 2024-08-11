@@ -13,14 +13,14 @@ import timeImageSrc from '/src/assets/images/time.png';
 import randomFoodSrc from '/src/assets/images/food/randomFood.png';
 import ChangeOrientationScreen from '../game/components/ChangeOrientationScreen';
 
-import { useApp } from '../app/AppContext.jsx';
-import { useSettings } from '../menu/context/SettingsContext.jsx';
-import { useImages } from '../../images/ImagesContext.jsx';
+import { useApp } from '../../contexts/AppContext.jsx';
+import { useSettings } from '../../contexts/SettingsContext.jsx';
+import { useImages } from '../../contexts/ImagesContext.jsx';
 import { useSnakeAI } from './components/SnakeAI.jsx';
 import { useScreenOrientation } from '../../hooks/useScreenOrientation.jsx';
 
 import { isMobile } from 'react-device-detect';
-import { backgroundStyles } from '../menu/context/SettingsContext.jsx';
+import { backgroundStyles } from '../../contexts/SettingsContext.jsx';
 import { useAudio } from '../../hooks/useAudio.jsx';
 
 const GamePage = () => {

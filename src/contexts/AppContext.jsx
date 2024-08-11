@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useSettings } from "../menu/context/SettingsContext";
+import { useSettings } from "./SettingsContext";
 
 const AppContext = createContext();
 const SPRITE_PIXELS = 1; // (16x16) Not in use rn

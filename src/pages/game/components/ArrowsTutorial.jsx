@@ -2,7 +2,7 @@ import React from "react";
 
 import arrowsTutorialSrc from '/src/assets/images/arrowsTutorial.png';
 
-import { useApp } from "../../app/AppContext";
+import { useApp } from "../../../contexts/AppContext";
 
 const ArrowsTutorial = ({ condition = true }) => {
     const { CELL_SIZE } = useApp();
