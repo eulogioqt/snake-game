@@ -7,10 +7,10 @@ import GameWin from './components/GameWin.jsx';
 import InfoDisplayItem from './components/InfoDisplayItem.jsx';
 import ArrowsTutorial from './components/ArrowsTutorial.jsx';
 
-import soundOnSrc from '/src/assets/soundOn.png';
-import soundOffSrc from '/src/assets/soundOff.png';
-import timeImageSrc from '/src/assets/time.png';
-import randomFoodSrc from '/src/assets/randomFood.png';
+import soundOnSrc from '/src/assets/images/soundOn.png';
+import soundOffSrc from '/src/assets/images/soundOff.png';
+import timeImageSrc from '/src/assets/images/time.png';
+import randomFoodSrc from '/src/assets/images/food/randomFood.png';
 import ChangeOrientationScreen from '../game/components/ChangeOrientationScreen';
 
 import { useApp } from '../app/AppContext.jsx';

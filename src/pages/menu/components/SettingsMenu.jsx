@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
-import { Palette, Palette2, Gear, HeartFill, Apple, Clock, Back } from 'react-bootstrap-icons';
+import { Palette, Gear, HeartFill, Apple, Clock, Back } from 'react-bootstrap-icons';
 
-import { useSettings, backgroundStyles, backgronudThumbnails } from '../context/SettingsContext';
+import { useSettings, backgronudThumbnails } from '../context/SettingsContext';
 import { useImages } from '../../../images/ImagesContext';
 import { useApp } from '../../app/AppContext';
 
-import randomFoodSrc from '/src/assets/randomFood.png';
+import randomFoodSrc from '/src/assets/images/food/randomFood.png';
 
 import SelectFoodMenu from './SelectFoodMenu';
 import SelectBackgroundMenu from './SelectBackgroundMenu';

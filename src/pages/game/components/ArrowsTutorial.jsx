@@ -1,6 +1,6 @@
 import React from "react";
 
-import arrowsTutorialSrc from '/src/assets/arrowsTutorial.png';
+import arrowsTutorialSrc from '/src/assets/images/arrowsTutorial.png';
 
 import { useApp } from "../../app/AppContext";
 

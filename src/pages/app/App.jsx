@@ -6,7 +6,7 @@ import GamePage from "../game/GamePage";
 import { useImages } from '../../images/ImagesContext';
 import LoadingScreen from './components/LoadingScreen';
 
-import './App.css';
+import '../../css/app.css';
 
 const App = () => {
     const { imagesLoaded } = useImages();
