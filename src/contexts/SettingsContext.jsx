@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState } from "react";
 
-import redBackgroundSrc from '/src/assets/redBackground.png';
-import greenBackgroundSrc from '/src/assets/greenBackground.png';
-import blueBackgroundSrc from '/src/assets/blueBackground.png';
+import redBackgroundSrc from '/src/assets/images/background/redBackground.png';
+import greenBackgroundSrc from '/src/assets/images/background/greenBackground.png';
+import blueBackgroundSrc from '/src/assets/images/background/blueBackground.png';
 
 const SettingsContext = createContext();
 

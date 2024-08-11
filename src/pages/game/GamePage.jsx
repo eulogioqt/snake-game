@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import GameArea from './components/GameArea.jsx';
 import ControlPad from './components/ControlPad.jsx';
@@ -7,20 +7,20 @@ import GameWin from './components/GameWin.jsx';
 import InfoDisplayItem from './components/InfoDisplayItem.jsx';
 import ArrowsTutorial from './components/ArrowsTutorial.jsx';
 
-import soundOnSrc from '/src/assets/soundOn.png';
-import soundOffSrc from '/src/assets/soundOff.png';
-import timeImageSrc from '/src/assets/time.png';
-import randomFoodSrc from '/src/assets/randomFood.png';
+import soundOnSrc from '/src/assets/images/soundOn.png';
+import soundOffSrc from '/src/assets/images/soundOff.png';
+import timeImageSrc from '/src/assets/images/time.png';
+import randomFoodSrc from '/src/assets/images/food/randomFood.png';
 import ChangeOrientationScreen from '../game/components/ChangeOrientationScreen';
 
-import { useApp } from '../app/AppContext.jsx';
-import { useSettings } from '../menu/context/SettingsContext.jsx';
-import { useImages } from '../../images/ImagesContext.jsx';
+import { useApp } from '../../contexts/AppContext.jsx';
+import { useSettings } from '../../contexts/SettingsContext.jsx';
+import { useImages } from '../../contexts/ImagesContext.jsx';
 import { useSnakeAI } from './components/SnakeAI.jsx';
 import { useScreenOrientation } from '../../hooks/useScreenOrientation.jsx';
 
 import { isMobile } from 'react-device-detect';
-import { backgroundStyles } from '../menu/context/SettingsContext.jsx';
+import { backgroundStyles } from '../../contexts/SettingsContext.jsx';
 import { useAudio } from '../../hooks/useAudio.jsx';
 
 const GamePage = () => {
@@ -67,7 +67,7 @@ const GamePage = () => {
     const wallCollision = (snake) => snake[0].x < 0 || snake[0].y < 0 || snake[0].x >= WIDTH_CELLS || snake[0].y >= HEIGHT_CELLS;
     const checkCollision = (snake) => bodyCollision(snake) || wallCollision(snake);
     const checkWin = (snake) => snake.length === (WIDTH_CELLS * HEIGHT_CELLS);
-    const handleDir = (keyCode) => {
+    const handleDir = useCallback((keyCode) => {
         const newDir = DIRECTIONS[keyCode];
 
         if (newDir) {
@@ -90,7 +90,7 @@ const GamePage = () => {
                 }
             }
         }
-    };
+    }, [gameStatus]);
 
     useEffect(() => {
         const handleKeyDown = (event) => handleDir(event.keyCode);
@@ -216,7 +216,7 @@ const GamePage = () => {
     }
 
     const SoundButton = () => (
-        <div className='me-4' style={{ cursor: "pointer" }} onClick={() => setSound(sound => !sound)}>
+        <div style={{ cursor: "pointer", marginRight: CELL_SIZE }} onClick={() => setSound(sound => !sound)}>
             <img src={sound ? soundOnSrc : soundOffSrc} style={{ width: CELL_SIZE, height: CELL_SIZE, imageRendering: 'pixelated' }} />
         </div>
     )

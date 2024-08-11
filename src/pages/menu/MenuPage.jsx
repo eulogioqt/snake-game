@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+
 import { Play, Gear } from 'react-bootstrap-icons';
-import { useApp, useIsLarge } from "../app/AppContext";
+
+import { useApp } from "../../contexts/AppContext";
+import { useIsLarge } from "../../hooks/useIsLarge";
+
 import SettingsMenu from "./components/SettingsMenu";
 
 const MenuPage = () => {
@@ -32,18 +36,8 @@ const MenuPage = () => {
                     Snake Game
                 </span>
 
-                <ResponsiveButton
-                    text="Jugar"
-                    onClick={goToGame}
-                    icon={Play}
-                    color="btn-primary"
-                />
-                <ResponsiveButton
-                    text="Ajustes"
-                    onClick={swapSettingsOpen}
-                    icon={Gear}
-                    color="btn-secondary"
-                />
+                <ResponsiveButton text="Jugar" onClick={goToGame} icon={Play} color="btn-primary" />
+                <ResponsiveButton text="Ajustes" onClick={swapSettingsOpen} icon={Gear} color="btn-secondary" />
             </div>
         </>
     );

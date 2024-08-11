@@ -1,11 +1,11 @@
 import React from "react";
 
-import rotateScreenSrc from '/src/assets/rotateScreenSymbol.png';
+import rotateScreenSrc from '/src/assets/images/rotateScreenSymbol.png';
 
-import { useApp } from "../../app/AppContext";
-import { useSettings } from "../../menu/context/SettingsContext";
+import { useApp } from "../../../contexts/AppContext";
+import { useSettings } from "../../../contexts/SettingsContext";
 
-import { backgroundStyles } from "../../menu/context/SettingsContext";
+import { backgroundStyles } from "../../../contexts/SettingsContext";
 
 import "../../../css/rotationAnimation.css";
 

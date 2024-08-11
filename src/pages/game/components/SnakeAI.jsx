@@ -1,5 +1,5 @@
 import { useRef } from 'react';
-import { useApp } from '../../app/AppContext';
+import { useApp } from '../../../contexts/AppContext';
 
 export const useSnakeAI = () => {
     const { WIDTH_CELLS, HEIGHT_CELLS } = useApp();

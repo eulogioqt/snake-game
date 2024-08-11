@@ -2,10 +2,10 @@ import React from 'react';
 
 import ControlPadButton from './ControlPadButton';
 
-import { useApp } from '../../app/AppContext';
-import { useSettings } from '../../menu/context/SettingsContext';
+import { useApp } from '../../../contexts/AppContext';
+import { useSettings } from '../../../contexts/SettingsContext';
 
-import { backgroundStyles } from '../../menu/context/SettingsContext';
+import { backgroundStyles } from '../../../contexts/SettingsContext';
 
 const ControlPad = ({ onKeyDown }) => {
     const { DISPLAY_PAD, CELL_SIZE, WIDTH_CELLS } = useApp();

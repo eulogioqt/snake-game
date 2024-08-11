@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 
-import appleImageSrc from '/src/assets/apple.png';
-import blueberryImageSrc from '/src/assets/blueberry.png';
-import bananaImageSrc from '/src/assets/banana.png';
-import cherryImageSrc from '/src/assets/cherry.png';
-import bluecherryImageSrc from '/src/assets/bluecherry.png';
-import grapeImageSrc from '/src/assets/grape.png';
-import mangoImageSrc from '/src/assets/mango.png';
+import appleImageSrc from '/src/assets/images/food/apple.png';
+import blueberryImageSrc from '/src/assets/images/food/blueberry.png';
+import bananaImageSrc from '/src/assets/images/food/banana.png';
+import cherryImageSrc from '/src/assets/images/food/cherry.png';
+import bluecherryImageSrc from '/src/assets/images/food/bluecherry.png';
+import grapeImageSrc from '/src/assets/images/food/grape.png';
+import mangoImageSrc from '/src/assets/images/food/mango.png';
 
 import { getAverageColor } from '../utils/ImageUtils';
 

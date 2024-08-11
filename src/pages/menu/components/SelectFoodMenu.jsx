@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { useSettings } from '../context/SettingsContext';
-import { useImages } from '../../../images/ImagesContext';
+import { useSettings } from '../../../contexts/SettingsContext';
+import { useImages } from '../../../contexts/ImagesContext';
 
-import randomFoodSrc from '/src/assets/randomFood.png';
+import randomFoodSrc from '/src/assets/images/food/randomFood.png';
 import SelectDisplayItem from './SelectDisplayItem';
 
 const SelectFoodMenu = ({ selectFoodOpen, closeMenu }) => {

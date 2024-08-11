@@ -1,5 +1,5 @@
 import React from "react";
-import { useApp } from "../../app/AppContext";
+import { useApp } from "../../../contexts/AppContext";
 
 const InfoDisplayItem = ({ imageSrc, text }) => {
     const { CELL_SIZE } = useApp();

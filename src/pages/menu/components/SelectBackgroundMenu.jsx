@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { backgronudThumbnails, useSettings } from '../context/SettingsContext';
+import { backgronudThumbnails, useSettings } from '../../../contexts/SettingsContext';
 
 import SelectDisplayItem from './SelectDisplayItem';
 

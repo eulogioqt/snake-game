@@ -1,5 +1,6 @@
 import React from 'react';
-import { useApp, useIsLarge } from '../../app/AppContext';
+import { useApp } from '../../../contexts/AppContext';
+import { useIsLarge } from '../../../hooks/useIsLarge';
 
 const GameEndScreen = ({ gameStatus, playAgain, score, time, statusText, showCondition }) => {
     const { handlePageIndex } = useApp();
