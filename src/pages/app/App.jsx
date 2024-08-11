@@ -11,6 +11,7 @@ import '../../css/app.css';
 const App = () => {
     const { imagesLoaded } = useImages();
     const { getPageIndex } = useApp();
+
     const pages = {
         0: <MenuPage />,
         1: <GamePage />

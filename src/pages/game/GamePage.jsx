@@ -216,7 +216,7 @@ const GamePage = () => {
     }
 
     const SoundButton = () => (
-        <div className='me-4' style={{ cursor: "pointer" }} onClick={() => setSound(sound => !sound)}>
+        <div style={{ cursor: "pointer", marginRight: CELL_SIZE }} onClick={() => setSound(sound => !sound)}>
             <img src={sound ? soundOnSrc : soundOffSrc} style={{ width: CELL_SIZE, height: CELL_SIZE, imageRendering: 'pixelated' }} />
         </div>
     )

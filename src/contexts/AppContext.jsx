@@ -1,4 +1,7 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState } from "react";
+
+import { useWindowSize } from "../hooks/useWindowSize";
+import { useIsLarge } from "../hooks/useIsLarge";
 import { useSettings } from "./SettingsContext";
 
 const AppContext = createContext();
@@ -57,26 +60,3 @@ export const AppProvider = ({ children }) => {
 };
 
 export const useApp = () => useContext(AppContext);
-
-export const useWindowSize = () => {
-    const [width, setWidth] = useState(window.innerWidth);
-    const [height, setHeight] = useState(window.innerHeight);
-
-    useEffect(() => {
-        const handleResize = () => {
-            setWidth(window.innerWidth);
-            setHeight(window.innerHeight);
-        }
-
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
-
-    return { width, height };
-};
-
-export const useIsLarge = () => {
-    const { width } = useWindowSize();
-
-    return width > 768;
-};

@@ -1,8 +1,8 @@
 import React, { createContext, useContext } from "react";
 
 import { useSettings } from "./SettingsContext.jsx";
-import { useSnakeImages } from "../images/SnakeImages.jsx";
-import { useFoodImages } from "../images/FoodImages.jsx";
+import { useSnakeImages } from "../hooks/useSnakeImages.jsx";
+import { useFoodImages } from "../hooks/useFoodImages.jsx";
 
 const ImagesContext = createContext();
 

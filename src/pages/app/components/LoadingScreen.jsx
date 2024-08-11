@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useIsLarge } from "../../../contexts/AppContext";
+import { useIsLarge } from "../../../hooks/useIsLarge";
 
 const LoadingScreen = () => {
     const isLarge = useIsLarge();
