@@ -2,12 +2,17 @@
 
 Welcome to the **Snake Game** project! This is a modern twist on the classic snake game, built using React JS. It's simple, fun, and has some cool customizations. You can start playing right away by clicking [here](https://eulogioqt.github.io/snake-game).
 
-![Normal Game Screenshoot](public/images/normalGame.jpg)
-![Random Food Game Screenshot](public/images/randomFoodGame.jpg)
-![Purple Game Screenshoot](public/images/purpleGame.jpg)
-![Mobile Game Screenshot](public/images/mobileGame.jpg)
-![Config Menu Screenshoot](public/images/configMenu.jpg)
-![Select Food Menu Screenshot](public/images/selectFoodMenu.jpg)
+<p align="center">
+  <img src="public/images/normalGame.jpg" alt="Normal Game Screenshot" width="30%" />
+  <img src="public/images/randomFoodGame.jpg" alt="Random Food Game Screenshot" width="30%" />
+  <img src="public/images/purpleGame.jpg" alt="Purple Game Screenshot" width="30%" />
+</p>
+
+<p align="center">
+  <img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="30%" />
+  <img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="30%" />
+  <img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="30%" />
+</p>
 
 ## 🚀 Features
 
