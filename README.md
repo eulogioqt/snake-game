@@ -9,7 +9,7 @@ Welcome to the **Snake Game** project! This is a modern twist on the classic sna
 
 <p align="center">
   <img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="45%" style="margin-right: 10px;" />
-  <img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="45%" style="margin-bottom: 10px;" />
+  <img src="public/images/configGame.jpg" alt="Config Menu Screenshot" width="45%" style="margin-bottom: 10px;" />
 </p>
 
 
