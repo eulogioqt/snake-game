@@ -4,18 +4,18 @@ Welcome to the **Snake Game** project! This is a modern twist on the classic sna
 
 <table>
   <tr>
-    <td><img src="public/images/normalGame.jpg" alt="Normal Game Screenshot" width="100%"></td>
-    <td><img src="public/images/randomFoodGame.jpg" alt="Random Food Game Screenshot" width="100%"></td>
+    <td><img src="public/images/normalGame.jpg" alt="Normal Game Screenshot" width="50%"></td>
+    <td><img src="public/images/randomFoodGame.jpg" alt="Random Food Game Screenshot" width="50%"></td>
   </tr>
   <tr>
-    <td><img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="100%"></td>
+    <td><img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="50%"></td>
     <td>
       <table>
         <tr>
-          <td><img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="100%"></td>
+          <td><img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="50%"></td>
         </tr>
         <tr>
-          <td><img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="100%"></td>
+          <td><img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="50%"></td>
         </tr>
       </table>
     </td>
