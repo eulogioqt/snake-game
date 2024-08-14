@@ -10,16 +10,16 @@ Welcome to the **Snake Game** project! This is a modern twist on the classic sna
 <div style="display: flex">
 <div>
 <p align="center">
-    <img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="45%" style="margin-right: 10px;" />
+    <img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="100%" style="margin-right: 10px;" />
 </p>
 </div>
 
 <div>
 <p align="center">
-    <img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="45%" style="margin-bottom: 10px;" />
+    <img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="100%" style="margin-bottom: 10px;" />
 </p>
 <p align="center">
-    <img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="45%" />
+    <img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="100%" />
 </p>
 </div>
 </div>
