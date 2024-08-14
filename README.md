@@ -2,28 +2,28 @@
 
 Welcome to the **Snake Game** project! This is a modern twist on the classic snake game, built using React JS. It's simple, fun, and has some cool customizations. You can start playing right away by clicking [here](https://eulogioqt.github.io/snake-game).
 
-<p align="center">
-    <img src="public/images/normalGame.jpg" alt="Normal Game Screenshot" width="45%" style="margin-right: 10px;" />
-    <img src="public/images/randomFoodGame.jpg" alt="Random Food Game Screenshot" width="45%" />
-</p>
+<table>
+  <tr>
+    <td>
+      <img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="300" />
+    </td>
+    <td>
+      <table>
+        <tr>
+          <td><img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="150" /></td>
+        </tr>
+        <tr>
+          <td><img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="150" /></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
 
-<div style="display: flex">
-<div>
 <p align="center">
-    <img src="public/images/mobileGame.jpg" alt="Mobile Game Screenshot" width="100%" style="margin-right: 10px;" />
+  <img src="public/images/normalGame.jpg" alt="Normal Game Screenshot" width="300" style="margin-right: 10px;" />
+  <img src="public/images/randomFoodGame.jpg" alt="Random Food Game Screenshot" width="300" />
 </p>
-</div>
-
-<div>
-<p align="center">
-    <img src="public/images/configMenu.jpg" alt="Config Menu Screenshot" width="100%" style="margin-bottom: 10px;" />
-</p>
-<p align="center">
-    <img src="public/images/selectFoodMenu.jpg" alt="Select Food Menu Screenshot" width="100%" />
-</p>
-</div>
-</div>
-
 
 
 ## 🚀 Features
