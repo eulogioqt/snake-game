@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Play, Gear, ArrowUpRight } from 'react-bootstrap-icons';
+import React, { useState, useEffect } from "react";
+import { Play, Gear } from 'react-bootstrap-icons';
 import { useApp } from "../../contexts/AppContext";
 import { useIsLarge } from "../../hooks/useIsLarge";
 import SettingsMenu from "./components/SettingsMenu";
@@ -7,8 +7,22 @@ import SettingsMenu from "./components/SettingsMenu";
 const MenuPage = () => {
     const { handlePageIndex } = useApp();
     const isLarge = useIsLarge();
-
     const [settingsOpen, setSettingsOpen] = useState(false);
+
+    useEffect(() => {
+        const setFullHeight = () => {
+            document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+        };
+
+        window.addEventListener('resize', setFullHeight);
+        window.addEventListener('load', setFullHeight);
+        setFullHeight(); // Initial call
+
+        return () => {
+            window.removeEventListener('resize', setFullHeight);
+            window.removeEventListener('load', setFullHeight);
+        };
+    }, []);
 
     const goToGame = () => handlePageIndex(1);
     const swapSettingsOpen = () => setSettingsOpen(settings => !settings);
@@ -27,8 +41,8 @@ const MenuPage = () => {
     return (
         <>
             <SettingsMenu settingsOpen={settingsOpen} closeSettings={swapSettingsOpen} />
-
-            <div className="d-flex flex-column align-items-center justify-content-center w-100 vh-100">
+            <div className="d-flex flex-column align-items-center justify-content-center w-100"
+                style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
                 <span className="mb-5 text-center" style={{ fontSize: isLarge ? "5rem" : "3rem" }}>
                     Snake Game
                 </span>
@@ -37,8 +51,8 @@ const MenuPage = () => {
                 <ResponsiveButton text="Ajustes" onClick={swapSettingsOpen} icon={Gear} color="btn-secondary" />
             </div>
 
-            {/* Marca de agua con posicionamiento responsivo */}
-            <div className={`position-fixed bottom-0 ${isLarge ? 'end-0' : 'start-50 translate-middle-x'} p-2`} style={{ zIndex: 1000 }}>
+            <div className={`position-fixed bottom-0 ${isLarge ? 'end-0' : 'start-50 translate-middle-x'} p-2`}
+                style={{ zIndex: 10 }}>
                 <a href="https://eulogioqt.github.io" target="_blank"
                     style={{
                         textDecoration: "none",
@@ -58,8 +72,7 @@ const MenuPage = () => {
                     onMouseLeave={(e) => {
                         e.currentTarget.style.opacity = 0.8;
                         e.currentTarget.style.transform = "scale(1)";
-                    }}
-                >
+                    }}>
                     <div className="d-flex flex-column align-items-center">
                         <span>Project by</span>
                         <div className="d-flex justify-content-center align-items-center">
