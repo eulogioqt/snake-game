@@ -15,12 +15,3 @@ img {
     -webkit-user-select: none;
     -ms-user-select: none;
 }
-
-.logo {
-    will-change: filter;
-    transition: filter 300ms;
-}
-
-.logo:hover {
-    filter: drop-shadow(0 0 20px gray);
-}
