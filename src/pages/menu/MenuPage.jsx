@@ -1,10 +1,7 @@
 import React, { useState } from "react";
-
-import { Play, Gear } from 'react-bootstrap-icons';
-
+import { Play, Gear, ArrowUpRight } from 'react-bootstrap-icons';
 import { useApp } from "../../contexts/AppContext";
 import { useIsLarge } from "../../hooks/useIsLarge";
-
 import SettingsMenu from "./components/SettingsMenu";
 
 const MenuPage = () => {
@@ -38,6 +35,40 @@ const MenuPage = () => {
 
                 <ResponsiveButton text="Jugar" onClick={goToGame} icon={Play} color="btn-primary" />
                 <ResponsiveButton text="Ajustes" onClick={swapSettingsOpen} icon={Gear} color="btn-secondary" />
+            </div>
+
+            {/* Marca de agua con posicionamiento responsivo */}
+            <div className={`position-fixed bottom-0 ${isLarge ? 'end-0' : 'start-50 translate-middle-x'} p-2`} style={{ zIndex: 1000 }}>
+                <a href="https://eulogioqt.github.io" target="_blank"
+                    style={{
+                        textDecoration: "none",
+                        color: "gray",
+                        fontSize: "0.9rem",
+                        fontWeight: "bold",
+                        opacity: 0.8,
+                        display: "flex",
+                        alignItems: "center",
+                        cursor: "pointer",
+                        transition: "opacity 0.3s, transform 0.3s"
+                    }}
+                    onMouseEnter={(e) => {
+                        e.currentTarget.style.opacity = 1;
+                        e.currentTarget.style.transform = "scale(1.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                        e.currentTarget.style.opacity = 0.8;
+                        e.currentTarget.style.transform = "scale(1)";
+                    }}
+                >
+                    <div className="d-flex flex-column align-items-center">
+                        <span>Project by</span>
+                        <div className="d-flex justify-content-center align-items-center">
+                            <img src="https://www.github.com/eulogioqt.png"
+                                style={{ width: 25, height: 25, marginRight: 4 }} />
+                            <span style={{ color: "black", margin: 0 }}>Eulogio Quemada</span>
+                        </div>
+                    </div>
+                </a>
             </div>
         </>
     );
