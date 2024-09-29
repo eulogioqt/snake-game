@@ -42,7 +42,7 @@ const MenuPage = () => {
         <>
             <SettingsMenu settingsOpen={settingsOpen} closeSettings={swapSettingsOpen} />
             <div className="d-flex flex-column align-items-center justify-content-center w-100"
-                style={{ height: 'calc(var(--vh, 1vh) * 100)' }}>
+                style={{ height: '100svh' }}>
                 <span className="mb-5 text-center" style={{ fontSize: isLarge ? "5rem" : "3rem" }}>
                     Snake Game
                 </span>
